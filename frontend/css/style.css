@@ -1,0 +1,166 @@
+body {
+    background: black;
+    font-family: monospace;
+}
+
+.message-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 300px;
+    height: 60px;
+    border-radius: 6px;
+    background: #222;
+    color: beige;
+    border: 1px solid black;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.waiting-message{
+	justify-content: space-evenly;
+}
+
+.message-container p,
+span {
+    font-size: 18px;
+}
+
+.words__main {
+    width: 1000px;
+    margin: 0 auto;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.words__container {
+    position: relative;
+
+    display: flex;
+    overflow: hidden;
+
+    width: 1000px;
+    height: auto;
+    min-height: 100px;
+    max-height: 180px;
+    padding: 0 25px;
+
+    transition: all .35s ease-out;
+
+    border-radius: 6px;
+    border: 1px solid beige;
+
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.words__textarea {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    min-height: 100px;
+
+    resize: none;
+    cursor: default;
+
+    color: transparent;
+    border: none;
+    border-radius: 6px;
+    outline: none;
+    background: transparent;
+}
+
+.words__counter h1 {
+    font-size: 100px;
+    color: beige;
+}
+
+.word {
+    font-size: 24px;
+
+    position: relative;
+
+    display: flex;
+
+    margin-right: 15px;
+
+    justify-content: center;
+    align-items: center;
+    color: black;
+}
+
+.word:before {
+    position: absolute;
+    bottom: -15%;
+    left: 0;
+
+    width: 100%;
+    height: 3px;
+
+    content: '';
+    transition: all .1s ease-out;
+
+    opacity: 0;
+    border-radius: 6px;
+    background: crimson;
+}
+
+.word.word__incorrect:before {
+    opacity: 1;
+}
+
+.word span {
+    color: beige;
+    transition: all .1s ease-out;
+}
+
+.correct {
+    color: green;
+}
+
+.incorrect {
+    color: crimson;
+}
+
+.extra {
+    color: magenta;
+}
+
+.typing_loader {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: typing 1s linear infinite alternate;
+    /* Not necessary- its only for layouting*/
+    position: relative;
+    left: -12px;
+}
+
+@keyframes typing {
+    0% {
+        background-color: beige;
+        box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2),
+            24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+    }
+
+    25% {
+        background-color: beige;
+        opacity: .6;
+        box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 2),
+            24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+    }
+
+    75% {
+        background-color: beige;
+        opacity: .4;
+        box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2),
+            24px 0px 0px 0px rgba(255, 255, 255, 1);
+    }
+}
