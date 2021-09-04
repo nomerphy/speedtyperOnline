@@ -19,7 +19,12 @@ body {
 }
 
 .waiting-message{
-	justify-content: space-evenly;
+    justify-content: space-evenly;
+}
+
+.waiting-message p {
+    width:  200px;
+    min-height: 20px;
 }
 
 .message-container p,
@@ -34,6 +39,15 @@ span {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.words__main-wrap{
+    position: relative;
+
+    display: flex;
+
+    width: 100%;
+    min-height: 100px;
 }
 
 .words__container {
@@ -51,7 +65,6 @@ span {
     transition: all .35s ease-out;
 
     border-radius: 6px;
-    border: 1px solid beige;
 
     justify-content: flex-start;
     align-items: center;
@@ -66,7 +79,6 @@ span {
 
     width: 100%;
     min-height: 100px;
-
     resize: none;
     cursor: default;
 
@@ -121,15 +133,15 @@ span {
     transition: all .1s ease-out;
 }
 
-.correct {
+span.correct {
     color: green;
 }
 
-.incorrect {
+span.incorrect {
     color: crimson;
 }
 
-.extra {
+span.extra {
     color: magenta;
 }
 

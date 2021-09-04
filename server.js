@@ -35,17 +35,23 @@ let playerIndex = -1
 
   if (playerIndex == 1) {
     createWordsArray(databaseWords[0], emptyArray, wordsArray)
+
+    setTimeout(() => {
+      emptyArray = []
+      wordsArray = []
+    }, 5000)
   }
 
   connections[playerIndex] = socket
   socket.broadcast.emit('player-connect', playerIndex)
-  io.emit('send-words', wordsArray)
 
   socket.on('disconnect', function() {
       console.log(`Player ${playerIndex} disconnected`)
       socket.broadcast.emit('player-disconnect', playerIndex)
       connections[playerIndex] = null
   })
+
+  io.emit('send-words', wordsArray)
 })
 
 function createWordsArray(data, arr, container) {
