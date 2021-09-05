@@ -45,6 +45,10 @@ let playerIndex = -1
   connections[playerIndex] = socket
   socket.broadcast.emit('player-connect', playerIndex)
 
+  socket.on('end-result', function(data) {
+    console.log(data)
+  })
+
   socket.on('disconnect', function() {
       console.log(`Player ${playerIndex} disconnected`)
       socket.broadcast.emit('player-disconnect', playerIndex)

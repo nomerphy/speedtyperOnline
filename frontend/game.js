@@ -11,6 +11,20 @@ let wordsArray
 const wordsContainer = document.querySelector('.words__container')
 const textarea = document.querySelector('.words__textarea')
 const wordsAmount = document.querySelector('.words__counter h1')
+const timerHTML = document.querySelector('.timer')
+const slash = document.querySelector('.slash')
+const resultMenu = document.querySelector('.results')
+const resultMenuStats = document.querySelector('.results__main')
+const wpmHTML = document.querySelector('.wpm')
+const accuracyHTML = document.querySelector('.accuracy')
+const wpmRawHTML = document.querySelector('.raw__wpm')
+const charactersHTML = document.querySelector('.characters')
+const timeHTML = document.querySelector('.time')
+const highScoreHTML = document.querySelector('.highscore')
+const chart = document.querySelector('.chart')
+const screenshotBtn = document.querySelector('.screenshot')
+const wordsHistory = document.querySelector('.results__history')
+const hintsContainer = document.querySelector('.hints');
 
 function startGame() {
   let seconds = 3
@@ -26,6 +40,13 @@ function startGame() {
         localGame.restart()
     } else {
         deployWords(wordsArray)
+        document.addEventListener('keyup', deleteLetterIndex)
+        document.addEventListener('keydown', nextWordActive)
+        document.addEventListener('keydown', startIntervalOnKey)
+        textarea.addEventListener('input', addExtraLetter)
+        textarea.addEventListener('input', checkIsWordCorrect)
+        wordsAmount.classList.add('active')
+        textarea.focus()
     }
   }
   }, 1000)
@@ -51,8 +72,11 @@ function countdownMessage(show, number) {
   countdownNumber.textContent = number
 }
 
+let playerIndex
+
 window.requestAnimationFrame(function() {
   socket.on('player-number', function(playerNumber) {
+    playerIndex = playerNumber
     if (playerNumber == 1) {
       waitingPlayerTwo(true)
       socket.on('player-connect', function() {
@@ -123,6 +147,24 @@ async function write(text) {
 
 startWriting()
 
+// start timer
+let prevTime
+let timed = false
+let timerInterval
+
+function startIntervalOnKey() {
+  if (!timed) {
+    timed = true
+    prevTime = Date.now()
+    timerInterval = setInterval(setTimer, 100)
+  }
+}
+
+function setTimer() {
+  const currentTime = Date.now() - prevTime
+  const time = (currentTime / 1000).toFixed(3)
+  timerHTML.textContent = time
+}
 
 function deployWords(words) {
   words.forEach((word) => {
@@ -138,6 +180,8 @@ function deployWords(words) {
       wordsContainer.firstChild.classList.add('active')
     })
   })
+
+  slashCoords()
 }
 
 // add extra letter function
@@ -151,12 +195,23 @@ function addExtraLetter() {
     span.innerHTML = textarea.value
     word.appendChild(span)
   }
+
+  slashCoords()
 }
 
-textarea.addEventListener('input', addExtraLetter)
+
+
+// caret animation
+function slashCoords() {
+  const word = document.querySelector('.word.active') || wordsContainer.firstChild;
+  const letter = word.children[letterIndex];
+  const letterCoords = letter.getBoundingClientRect();
+
+  slash.style.left = `${letterCoords.left}px`;
+  slash.style.top = `${letterCoords.top}px`;
+}
 
 function checkIsWordCorrect() {
-  console.log('checking');
   const word = document.querySelector('.word.active') || wordsContainer.firstChild
   const letter = word.children[letterIndex]
   const letterContent = letter.innerHTML || letter.textContent || letter.innerText
@@ -175,18 +230,21 @@ function checkIsWordCorrect() {
     textarea.value = ''
   }
 
+  // animate caret
+  const letterCoords = letter.getBoundingClientRect();
+  slash.classList.remove('animated');
+  slash.style.left = `${letterCoords.right}px`;
+  slash.style.top = `${letterCoords.top}px`;
+
   const lastWord = wordsContainer.lastChild
 
   if (lastWord.classList.contains('active') && letterIndex === lastWord.children.length) {
-    console.log('end of test')
-    // endResult()
-    // clearInterval(timerInterval)
+    endResult()
+    clearInterval(timerInterval)
   }
 
   // check for space button on keyboard statement
 }
-
-textarea.addEventListener('input', checkIsWordCorrect)
 
 // make next word active function
 function nextWordActive(e) {
@@ -199,6 +257,7 @@ function nextWordActive(e) {
     currentWord.classList.add('active')
     word.classList.remove('active')
     letterIndex = 0
+    slashCoords()
     textarea.value = ''
 
     for (let i = 0; i < word.children.length; ++i) {
@@ -217,17 +276,16 @@ function deleteLetterIndex(e) {
   if (word.lastChild.classList.contains('extra') && e.keyCode === 8) {
     letterIndex--
     letterIndex = letterIndex <= 0 ? 0 : letterIndex
+    slashCoords()
     word.removeChild(word.lastChild)
   } else if (e.keyCode === 8 || e.keyCode === 46) {
     letterIndex--
     letterIndex = letterIndex <= 0 ? 0 : letterIndex
     const letter = word.children[letterIndex]
     letter.className = ''
+    slashCoords()
   }
 }
-
-document.addEventListener('keyup', deleteLetterIndex)
-document.addEventListener('keydown', nextWordActive)
 
 // clear words area
 function clearWordsArea() {
@@ -263,5 +321,91 @@ function clearWordsArea() {
     }
   }
 
-  //slashCoords();
+  slashCoords();
+}
+
+// end of test function
+function endResult() {
+  textarea.removeEventListener('input', checkIsWordCorrect)
+
+  const timeContent = timerHTML.textContent
+  const time = Number((timeContent / 60).toFixed(2))
+  const letterLength = wordsContainer.querySelectorAll('span').length;
+  const avgWords = wordsContainer.children.length;
+  const avarageWordsAmount = (letterLength + wordIndex) / avgWords;
+  const wpmRaw = ((letterLength + wordIndex) / avarageWordsAmount) / time;
+  const correctLetters = wordsContainer.querySelectorAll('.correct').length;
+  const incorrectLetters = wordsContainer.querySelectorAll('.incorrect').length;
+  const extraLetters = wordsContainer.querySelectorAll('.extra').length;
+  const rawAccuracy = (correctLetters / letterLength) * 100;
+  const tooltipAccuracy = `${rawAccuracy.toString().slice(0, 5)}%`;
+  const roundAccuracy = Math.round(rawAccuracy);
+  const missedLetters = letterLength - (correctLetters + incorrectLetters);
+  const wpm = (((letterLength + wordIndex) - (incorrectLetters + missedLetters + extraLetters)) / avarageWordsAmount) / time;
+  const cpm = wpm * avarageWordsAmount;
+  const roundedWPM = Math.round(wpm);
+  const roundedWpmRaw = Math.round(wpmRaw);
+
+  wpmHTML.textContent = roundedWPM;
+  wpmHTML.setAttribute('data-tooltip', `${wpm.toFixed(2)} wpm (${cpm.toFixed(2)} cpm)`);
+
+  wpmRawHTML.textContent = roundedWpmRaw;
+  wpmRawHTML.setAttribute('data-tooltip', `${wpmRaw.toFixed(2)}`);
+
+  charactersHTML.textContent = `${correctLetters + wordIndex}/${incorrectLetters}/${extraLetters}/${missedLetters}`;
+  charactersHTML.setAttribute('data-tooltip', 'correct/incorrect/extra/missed');
+
+  timeHTML.textContent = `${Number(timeContent).toFixed(0)}s`;
+  timeHTML.setAttribute('data-tooltip', `${timeContent}s`);
+
+  accuracyHTML.textContent = `${roundAccuracy}%`;
+  accuracyHTML.setAttribute('data-tooltip', `${tooltipAccuracy}`);
+
+  resultMenu.classList.add('active');
+
+  //myChart.data.datasets[0].data = prevHighScore < wpm ? [roundedWPM, roundedWpmRaw, wpm.toFixed(0)] : [roundedWPM, roundedWpmRaw, Math.round(prevHighScore)];
+  //myChart.update();
+
+  randomHint();
+
+  const containerWords = document.querySelectorAll('.word');
+  containerWords.forEach((w) => {
+    w.style.display = 'block';
+  });
+
+  wordsHistory.innerHTML = wordsContainer.innerHTML;
+  setTimeout(() => {
+    resultMenuStats.classList.add('active');
+  }, 250);
+
+
+
+  const playerObj = {
+    playerIndex: playerIndex,
+    playerTime: Number(timerHTML.textContent)
+  }
+  socket.emit('end-result', playerObj)
+}
+
+const hintsArray = [
+  'Sit straight and remember to keep your back straight',
+  'Keep your elbows bent at the right angle',
+  'Face the screen with your head slightly tilted forward',
+  'Keep at least 45 - 70 cm of distance between your eyes and the screen',
+  'Еxpose the shoulder, arm, and wrist muscles to the least possible strain',
+  'Hit keys only with the fingers for which they have been reserved',
+  'Always return to the starting position of the fingers "ASDF – JKL;"',
+  'When typing, imagine the location of the symbol on the keyboard',
+  'Establish and maintain a rhythm while typing. Your keystrokes should come at equal intervals',
+  'Use the thumb of whichever hand is more convenient for you to press the Space bar',
+  'Take your time when typing to avoid mistakes',
+  'Do not rush when you just started learning. Speed up only when your fingers hit the right keys out of habit',
+  'Always scan the text a word or two in advance',
+];
+
+function randomHint() {
+  const randomNumber = Math.floor(Math.random() * hintsArray.length);
+  const hint = hintsArray[randomNumber];
+  const hintContainer = document.querySelector('.hint');
+  hintContainer.textContent = `Hint: ${hint}`;
 }
