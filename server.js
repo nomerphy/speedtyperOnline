@@ -34,7 +34,7 @@ let playerIndex = -1
   if (playerIndex == -1) return
 
   if (playerIndex == 1) {
-    createWordsArray(databaseWords[0], emptyArray, wordsArray)
+    createWordsArray(databaseWords, emptyArray, wordsArray)
 
     setTimeout(() => {
       emptyArray = []

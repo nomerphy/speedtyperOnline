@@ -24,7 +24,17 @@ const highScoreHTML = document.querySelector('.highscore')
 const chart = document.querySelector('.chart')
 const screenshotBtn = document.querySelector('.screenshot')
 const wordsHistory = document.querySelector('.results__history')
-const hintsContainer = document.querySelector('.hints');
+const hintsContainer = document.querySelector('.hints')
+
+const prevHighScore = localStorage.getItem('highscore')
+
+//themes
+const themeChanger = document.querySelector('.theme__changer')
+const themePicker = document.querySelector('.words__themePicker')
+const themePickerBg = document.querySelector('.words__themePicker-bg')
+const findTheme = document.querySelector('.findTheme')
+const randomThemeBtn = document.querySelector('.randomThemeBtn')
+
 
 function startGame() {
   let seconds = 3
@@ -46,7 +56,9 @@ function startGame() {
         textarea.addEventListener('input', addExtraLetter)
         textarea.addEventListener('input', checkIsWordCorrect)
         wordsAmount.classList.add('active')
+        wordsAmount.textContent = 'Start!'
         textarea.focus()
+        slashCoords()
     }
   }
   }, 1000)
@@ -106,9 +118,12 @@ const altText = document.querySelector('.waiting-message p')
 const move = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 async function startWriting() {
-  const strings = ['Waiting for Player 2',
+  const strings = [
+    'Waiting for Player 2',
    'Tired?',
+   'Check your layout',
    'Waiting for Opponent',
+   'You are beautiful',
    'He is coming',
    'Waiting for Player 2',
    'How are you today?',
@@ -180,8 +195,6 @@ function deployWords(words) {
       wordsContainer.firstChild.classList.add('active')
     })
   })
-
-  slashCoords()
 }
 
 // add extra letter function
@@ -199,16 +212,14 @@ function addExtraLetter() {
   slashCoords()
 }
 
-
-
 // caret animation
 function slashCoords() {
-  const word = document.querySelector('.word.active') || wordsContainer.firstChild;
-  const letter = word.children[letterIndex];
-  const letterCoords = letter.getBoundingClientRect();
+  const word = document.querySelector('.word.active') || wordsContainer.firstChild
+  const letter = word.children[letterIndex] || word.firstChild
+  const letterCoords = letter.getBoundingClientRect()
 
-  slash.style.left = `${letterCoords.left}px`;
-  slash.style.top = `${letterCoords.top}px`;
+  slash.style.left = `${letterCoords.left}px`
+  slash.style.top = `${letterCoords.top}px`
 }
 
 function checkIsWordCorrect() {
@@ -324,6 +335,44 @@ function clearWordsArea() {
   slashCoords();
 }
 
+// chart.js
+const myChart = new Chart(chart, {
+  type: 'bar',
+  data: {
+    labels: ['wpm', 'raw wpm', 'highscore'],
+    datasets: [{
+      data: [],
+      backgroundColor: [
+        '#686de0',
+        '#5f27cd',
+        '#00b894',
+      ],
+      borderColor: [
+        '#555',
+        '#555',
+        '#555',
+      ],
+      borderWidth: 1,
+    }],
+  },
+  options: {
+    legend: {
+      display: false,
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      yAxes: [{
+        ticks: {
+          beginAtZero: true,
+        },
+      }],
+    },
+  },
+});
+
+Chart.defaults.global.defaultFontFamily = getComputedStyle(document.body).fontFamily;
+
 // end of test function
 function endResult() {
   textarea.removeEventListener('input', checkIsWordCorrect)
@@ -363,8 +412,8 @@ function endResult() {
 
   resultMenu.classList.add('active');
 
-  //myChart.data.datasets[0].data = prevHighScore < wpm ? [roundedWPM, roundedWpmRaw, wpm.toFixed(0)] : [roundedWPM, roundedWpmRaw, Math.round(prevHighScore)];
-  //myChart.update();
+  myChart.data.datasets[0].data = prevHighScore < wpm ? [roundedWPM, roundedWpmRaw, wpm.toFixed(0)] : [roundedWPM, roundedWpmRaw, Math.round(prevHighScore)];
+  myChart.update();
 
   randomHint();
 
@@ -409,3 +458,66 @@ function randomHint() {
   const hintContainer = document.querySelector('.hint');
   hintContainer.textContent = `Hint: ${hint}`;
 }
+
+const themesArray = [
+  'original_light',
+  'original_dark',
+  'obelix',
+  'olive_fern',
+  'slighter',
+  'oceanic',
+  'neon',
+  'react',
+  'dangeon',
+  'python',
+  'javascript',
+  'strawberry_fields',
+  'sky',
+  'plastic_tree',
+  'brownie',
+  'sea_gradient',
+  'salmon',
+  'mud_racer',
+  'creamy',
+  'lifestyle',
+  'innocence',
+  'twitch',
+  'joker',
+  'forest',
+  'sapphire',
+  'vanilla',
+  'radiance',
+  'faceit',
+  'steam',
+  'peachy',
+  'spaceless',
+  'sun',
+  'lilac',
+  'esmeralda',
+  'matrix',
+  'gardenia',
+  'syneva',
+  'vibe',
+  'moonlight',
+  'yellowstone',
+  'cobalt',
+  'led_zeppelin',
+  'greenwild',
+]
+
+// random themes
+function checkTheme() {
+  const currentTheme = null
+  if (currentTheme === null) {
+    const randomThemeNum = Math.floor(Math.random() * themesArray.length);
+    document.body.className = themesArray[randomThemeNum];
+    themeChanger.textContent = themesArray[randomThemeNum];
+    Chart.defaults.global.defaultFontColor = getComputedStyle(document.body).getPropertyValue('--background');
+  } else {
+    document.body.className = currentTheme;
+    themeChanger.textContent = currentTheme;
+    Chart.defaults.global.defaultFontColor = getComputedStyle(document.body).getPropertyValue('--background');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', checkTheme);

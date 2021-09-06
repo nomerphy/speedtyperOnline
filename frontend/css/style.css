@@ -16,6 +16,8 @@
 *,
 *:before,
 *:after {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
     color: var(--text);
 }
@@ -152,6 +154,8 @@ a {
     user-select: none;
     justify-content: center;
     align-items: center;
+    margin-top: 50px;
+    margin-bottom: 75px;
 }
 
 .words__counter h1 {
@@ -542,8 +546,8 @@ a {
 
 .slash {
     position: fixed;
-    top: 34%;
-    left:  25%;
+    top: 0;
+    left: 0;
     width: 3px;
     height: 25px;
     transition: all 0.1s ease-out;
@@ -1276,9 +1280,8 @@ a {
     width: 300px;
     height: 60px;
     border-radius: 6px;
-    background: #222;
+    background: var(--light);
     color: beige;
-    border: 1px solid black;
     display: none;
     justify-content: center;
     align-items: center;
@@ -1289,13 +1292,30 @@ a {
 }
 
 .waiting-message p {
-    color: white;
-    width: 200px;
+    color: var(--background);
+    width: 210px;
     min-height: 20px;
+    display:  flex;
+    align-items: flex-end;
+}
+
+.waiting-message p:after{
+    content: '';
+    width: 3px;
+    height: 15px;
+    transform:  translate(3px, -3px);
+    background: var(--background);
+    animation: fadeInOut .5s linear infinite alternate;
+}
+
+@keyframes fadeInOut{
+    to {
+        opacity: 0;
+    }
 }
 
 .countdown-message p, span{
-    color: white;
+    color: var(--background);
 }
 
 .message-container p,
@@ -1308,29 +1328,29 @@ span {
     height: 6px;
     border-radius: 50%;
     animation: typing 1s linear infinite alternate;
-    /* Not necessary- its only for layouting*/
     position: relative;
     left: -12px;
 }
 
 @keyframes typing {
     0% {
-        background-color: beige;
-        box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2),
-            24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+        opacity: .8;
+        background-color: var(--background);
+        box-shadow: 12px 0px 0px 0px var(--background),
+            24px 0px 0px 0px var(--background);
     }
 
     25% {
-        background-color: beige;
-        opacity: .6;
-        box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 2),
-            24px 0px 0px 0px rgba(255, 255, 255, 0.2);
+        background-color: var(--background);
+        opacity: .5;
+        box-shadow: 12px 0px 0px 0px var(--background),
+            24px 0px 0px 0px var(--background);
     }
 
     75% {
-        background-color: beige;
-        opacity: .4;
-        box-shadow: 12px 0px 0px 0px rgba(255, 255, 255, 0.2),
-            24px 0px 0px 0px rgba(255, 255, 255, 1);
+        background-color: var(--background);
+        opacity: .3;
+        box-shadow: 12px 0px 0px 0px var(--background),
+            24px 0px 0px 0px var(--background);
     }
 }

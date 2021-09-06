@@ -1,0 +1,429 @@
+body.original_light{
+	--light: #ddd;
+	--background:  #FFFFFF;
+	--dark: #222222;
+	--contrast: #888888;
+	--text: #222222;
+	--correct: limegreen;
+	--incorrect: #eb2f06;
+}
+
+body.original_dark{
+	--background: #181818;
+	--light: #666;
+	--dark: #666;
+	--text: #181818;
+	--contrast: #555;
+	--correct: white;
+	--incorrect: #BF0B21;
+}
+
+body.obelix{
+	--light: #FECC50;
+	--background: #1E0521;
+	--contrast: #CBCBCB;
+	--dark: #CBCBCB;
+	--text: #1E0521;
+	--correct: #5AA351;
+	--incorrect: #FF120C;
+}
+
+body.olive_fern{
+	--background: #F6F7CC;
+	--light: #004D26;
+	--contrast: #004D26;
+	--dark: #004D26;
+	--text: #F6F7CC;
+	--correct: #95B52E;
+	--incorrect: #C54A4A;
+}
+
+body.slighter{
+	--background: #2F4858;
+	--light: #B0FCC3;
+	--contrast: #418E97;
+	--text: #2F4858;
+	--dark: #B0FCC3;
+	--correct: #5BAD5E;
+	--incorrect: #F4798F;
+}
+
+body.oceanic{
+	--background: #002A29;
+	--light: #007A79;
+	--text: #002A29;
+	--contrast: #007A79;
+	--dark: #007A79;
+	--correct: #C7CEDF;
+	--incorrect: #BF0B21;
+}
+
+body.neon{
+	--background: #120052;
+	--light: #652EC7;
+	--text: #120052;
+	--contrast: #00C2BA;
+	--dark: #00C2BA;
+	--correct: #82E0BF;
+	--incorrect: #FF1493;
+}
+
+body.react{
+	--background: #282C34;
+	--light: #61DAFB;
+	--dark: #61DAFB;
+	--text: #282C34;
+	--contrast: #61DAFB;
+	--correct: #38A169;
+	--incorrect: #E53E3E;
+}
+
+body.dangeon{
+	--background: #030A04;
+	--light: #FFB85D;
+	--dark: #FFB85D;
+	--text: #030A04;
+	--contrast: #FFB85D;
+	--correct: #2F855A;
+	--incorrect: #FF5412;
+}
+
+body.python{
+	--background: #0D1C33;
+	--light: #FBDD56;
+	--dark: #2F6C9B;
+	--text: #0D1C33;
+	--contrast: #2F6C9B;
+	--correct: #2F855A;
+	--incorrect: #FF5412;
+}
+
+body.javascript{
+	--background: #F7E018;
+	--light: #000000;
+	--dark: #000000;
+	--text: #474C57;
+	--contrast: #000000;
+	--correct: #FBFBFB;
+	--incorrect: #9B2C2C;
+}
+
+body.strawberry_fields{
+	--background: #C43D56;
+	--light: #191F1D;
+	--dark: #191F1D;
+	--text: #C43D56;
+	--contrast: #191F1D;
+	--correct: #63EEDA;
+	--incorrect: #667EEA;
+}
+
+body.sky{
+	--background: #667EEA;
+	--light: #434190;
+	--dark: #434190;
+	--text: #667EEA;
+	--contrast: #434190;
+	--correct: #b0fcc3;
+	--incorrect: #DE5A5A;
+}
+
+body.plastic_tree{
+	--background: #67A030;
+	--light: #003700;
+	--dark: #003700;
+	--text: #67A030;
+	--contrast: #003700;
+	--correct: #FBFBFB;
+	--incorrect: #E53E3E;
+}
+
+body.brownie{
+	--background: #4A0D0B;
+	--light: #F0DB72;
+	--dark: #F0DB72;
+	--text: #4A0D0B;
+	--contrast: #F0DB72;
+	--correct: #2F855A;
+	--incorrect: #FF5412;
+}
+
+body.sea_gradient{
+	--background: #161616;
+	--light: linear-gradient(35deg, #6a11cb 0%, #2575fc 100%);
+	--dark: #2575fc;
+	--text: #FAFAFA;
+	--contrast: #2575fc;
+	--correct: #5BAD5E;
+	--incorrect: #F4798F;
+}
+
+body.salmon{
+	--background: #E86741;
+	--light: #1C2725;
+	--dark: #1C2725;
+	--text: #E86741;
+	--contrast: #1C2725;
+	--correct: #5FDAC4;
+	--incorrect: #ED709C;
+}
+
+body.mud_racer{
+	--background: #414141;
+	--light: #6B7478;
+	--dark: #6B7478;
+	--text: #282C34;
+	--contrast: #6B7478;
+	--correct: #FBFBFB;
+	--incorrect: #AE1A1A;
+}
+
+body.creamy{
+	--background: #FDB195;
+	--light: #E4815D;
+	--dark: #9C4B28;
+	--text: #282C34;
+	--contrast: #9C4B28;
+	--correct: #FBFBFB;
+	--incorrect: #D43838;
+}
+
+body.lifestyle{
+	--background: #E1DC6B;
+	--light: #A1AE25;
+	--dark: #523637;
+	--text: #523637;
+	--contrast: #523637;
+	--correct: #FBFBFB;
+	--incorrect: #E14141;
+}
+
+body.innocence{
+	--background: #EDF2F4;
+	--light: #EF233C;
+	--dark: #EF233C;
+	--text: #EDF2F4;
+	--contrast: #EF233C;
+	--correct: #A9EE50;
+	--incorrect: #23222F;
+}
+
+body.twitch{
+	--background: #9146FF;
+	--light: #000000;
+	--dark: #000000;
+	--text: #9146FF;
+	--contrast: #000000;
+	--correct: #F9DA63;
+	--incorrect: #FE230A;
+}
+
+body.joker{
+	--background: #51007A;
+	--light: #DBE800;
+	--dark: #DBE800;
+	--text: #51007A;
+	--contrast: #DBE800;
+	--correct: #FFFFFF;
+	--incorrect: #EE7B6E;
+}
+
+body.forest{
+	--background: #2A2A2A;
+	--light: #34BE5B;
+	--dark: #34BE5B;
+	--text: #2A2A2A;
+	--contrast: #34BE5B;
+	--correct: #F5F4F2;
+	--incorrect: #FF3939;
+}
+
+body.sapphire {
+	--background: #2176FF;
+	--light: #31393C;
+	--dark: #31393C;
+	--text: #2176FF;
+	--contrast: #31393C;
+	--correct: #E8E8E4;
+	--incorrect: #E26D5C;
+}
+
+body.vanilla{
+	--background: #FAF0CA;
+	--light: #0D3B66;
+	--dark: #0D3B66;
+	--text: #FAF0CA;
+	--contrast: #0D3B66;
+	--correct: #CBF694;
+	--incorrect: #FE6D73;
+}
+
+body.radiance{
+	--background: #F9DA63;
+	--light: #143642;
+	--dark: #143642;
+	--text: #F9DA63;
+	--contrast: #143642;
+	--correct: #E8E8E4;
+	--incorrect: #E26D5C;
+}
+
+body.faceit{
+	--background: #181818;
+	--light: #FF5500;
+	--dark: #FF5500;
+	--text: #181818;
+	--contrast: #FF5500;
+	--correct: #fbfbfb;
+	--incorrect: #C42A2E;
+}
+
+body.steam{
+	--background: #171a21;
+	--light: #2a475e;
+	--dark: #2a475e;
+	--text: #1b2838;
+	--contrast: #2a475e;
+	--correct: #A4D00E;
+	--incorrect: #F50200;
+}
+
+body.peachy{
+	--background: linear-gradient(90deg, #ed6ea0 30%, #ec8c69 100%);
+	--light: #eee;
+	--dark: #eee;
+	--text: #ec8c69;
+	--contrast: #eee;
+	--correct: #00b894;
+	--incorrect: #F50200;
+}
+
+body.spaceless{
+	--background: #1B1464;
+	--light: linear-gradient(90deg, #cc208e 5%, #6713d2 100%);
+	--dark: #6713d2;
+	--text: white;
+	--contrast: #6713d2;
+	--correct: #00b894;
+	--incorrect: #ED4C67;
+}
+
+body.sun{
+	--background: #FFC357;
+	--light: #D88144;
+	--dark: #D88144;
+	--text: #FFC357;
+	--contrast: #D88144;
+	--correct: #E4E2E2;
+	--incorrect: #E02A2A;
+}
+
+body.lilac{
+	--background: #8C2EE0;
+	--light: #52057B;
+	--dark: #52057B;
+	--text: #BC6FF1;
+	--contrast: #52057B;
+	--correct: #B0FCC3;
+	--incorrect: #E35858;
+}
+
+body.esmeralda{
+	--background: #222;
+	--light: linear-gradient(-20deg, #00cdac 0%, #8ddad5 100%);
+	--dark: #00cdac;
+	--text: #555;
+	--contrast: #00cdac;
+	--correct: #58B19F;
+	--incorrect: #E35858;
+}
+
+body.matrix{
+	--background: #0D0208;
+	--light: #008F11;
+	--dark: #008F11;
+	--text: #0D0208;
+	--contrast: #008F11;
+	--correct: #00FF41;;
+	--incorrect: crimson;
+}
+
+body.gardenia{
+	--background: #161616;
+	--light: #F97F51;
+	--dark: #F97F51;
+	--text: #161616;
+	--contrast: #F97F51;
+	--correct: #FEA47F;
+	--incorrect: #B33771;
+}
+
+body.syneva{
+	--background: #341f97;
+	--light: #ff9f43;
+	--dark: #ff9f43;
+	--text: #161616;
+	--contrast: #ff9f43;
+	--correct: #eee;
+	--incorrect: #ee5253;
+}
+
+body.vibe{
+	--background: #00304C;
+	--light: #D1FDAC;
+	--dark: #D1FDAC;
+	--text: #161616;
+	--contrast: #D1FDAC;
+	--correct: #1AA40E;
+	--incorrect: #D74646;
+}
+
+body.moonlight{
+	--background: #001427;
+	--light: #033565;
+	--dark: #FFFFFF;
+	--text: #FFFFFF;
+	--contrast: #FFFFFF;
+	--correct: #BADA55;
+	--incorrect: #E93636;
+}
+
+body.yellowstone{
+	--background: #000000;
+	--light: #FFFF00;
+	--dark: #FFFF00;
+	--text: #000000;
+	--contrast: #FFFF00;
+	--correct: #157417;
+	--incorrect: #fF0B0B;
+}
+
+body.cobalt{
+	--background: #1134CF;
+	--light: #81F3B1;
+	--dark: #81F3B1;
+	--text: #1134CF;
+	--contrast: #81F3B1;
+	--correct: #009B10;
+	--incorrect: #DA4B4B;
+}
+
+body.led_zeppelin{
+	--background: #000000;
+	--light: #F50537;
+	--dark: #FFFFFF;
+	--text: #FFFFFF;
+	--contrast: #FFFFFF;
+	--correct: #BADA55;
+	--incorrect: #7E0B0B;
+}
+
+body.greenwild{
+	--background: #394956;
+	--light: #00B388;
+	--dark: #00B388;
+	--text: #394956;
+	--contrast: #00B388;
+	--correct: #FEFEFE;
+	--incorrect: #F50537;
+}
