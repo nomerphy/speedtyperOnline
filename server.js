@@ -16,6 +16,25 @@ const databaseWords = require('./words.json')
 let emptyArray = []
 let wordsArray = []
 
+function createWordsArray(data, arr, container) {
+  const wordsAmountArray = [10, 15, 20, 25, 30, 35, 40, 45, 50]
+  const randomTotalNumber = Math.floor(Math.random() * wordsAmountArray.length)
+
+  const wordsTotal = wordsAmountArray[randomTotalNumber]
+
+  for (let a in data) {
+    let value = data[a]
+    arr.push(value)
+  }
+
+  arr = arr.reduce((a, b) => a.concat(b))
+
+  for (let i = 0; i < wordsTotal; i++) {
+    const randomNum = Math.floor(Math.random() * arr.length)
+    container.push(arr[randomNum])
+  }
+}
+
 server.listen(3000, console.log('server started'))
 
 const connections = [null, null]
@@ -39,7 +58,7 @@ let playerIndex = -1
     setTimeout(() => {
       emptyArray = []
       wordsArray = []
-    }, 5000)
+    }, 7000)
   }
 
   connections[playerIndex] = socket
@@ -57,22 +76,3 @@ let playerIndex = -1
 
   io.emit('send-words', wordsArray)
 })
-
-function createWordsArray(data, arr, container) {
-  const wordsAmountArray = [10, 15, 20, 25, 30, 35, 40, 45, 50]
-  const randomTotalNumber = Math.floor(Math.random() * wordsAmountArray.length)
-
-  const wordsTotal = wordsAmountArray[randomTotalNumber]
-
-  for (let a in data) {
-    let value = data[a]
-    arr.push(value)
-  }
-
-  arr = arr.reduce((a, b) => a.concat(b))
-
-  for (let i = 0; i < wordsTotal; i++) {
-    const randomNum = Math.floor(Math.random() * arr.length)
-    container.push(arr[randomNum])
-  }
-}

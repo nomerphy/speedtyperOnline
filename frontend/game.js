@@ -27,6 +27,8 @@ const wordsHistory = document.querySelector('.results__history')
 const hintsContainer = document.querySelector('.hints')
 
 const prevHighScore = localStorage.getItem('highscore')
+const fullscreenBtn = document.querySelector('.fullscreenBtn')
+const animationContainer = document.querySelector('.animation__container')
 
 //themes
 const themeChanger = document.querySelector('.theme__changer')
@@ -42,6 +44,10 @@ function startGame() {
   seconds--
   countdownMessage(true, seconds)
 
+  if (seconds < 2) {
+    animationContainer.classList.add('active')
+  }
+
   if (seconds == 0) {
     clearInterval(intervalId)
     countdownMessage(false, 0)
@@ -50,6 +56,7 @@ function startGame() {
         localGame.restart()
     } else {
         deployWords(wordsArray)
+        wordsContainer.classList.add('active')
         document.addEventListener('keyup', deleteLetterIndex)
         document.addEventListener('keydown', nextWordActive)
         document.addEventListener('keydown', startIntervalOnKey)
@@ -66,7 +73,8 @@ function startGame() {
 
 function messageVisibility(className, show) {
   const messageContainer = document.querySelector(className)
-  messageContainer.style.display = show ? 'flex' : 'none'
+  // messageContainer.style.display = show ? 'flex' : 'none'
+  const isShow = show ? messageContainer.classList.add('active') : messageContainer.classList.remove('active')
 }
 
 function waitingPlayerTwo(show) {
@@ -253,8 +261,6 @@ function checkIsWordCorrect() {
     endResult()
     clearInterval(timerInterval)
   }
-
-  // check for space button on keyboard statement
 }
 
 // make next word active function
@@ -376,6 +382,7 @@ Chart.defaults.global.defaultFontFamily = getComputedStyle(document.body).fontFa
 // end of test function
 function endResult() {
   textarea.removeEventListener('input', checkIsWordCorrect)
+  textarea.removeEventListener('blur', addBlurEffect);
 
   const timeContent = timerHTML.textContent
   const time = Number((timeContent / 60).toFixed(2))
@@ -521,3 +528,63 @@ function checkTheme() {
 }
 
 document.addEventListener('DOMContentLoaded', checkTheme);
+
+// words history
+function toggleWordHistory() {
+  hintsContainer.classList.toggle('active')
+  wordsHistory.classList.toggle('active')
+}
+
+document.querySelector('.history').addEventListener('click', toggleWordHistory)
+
+// Fullscreen
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else if (document.exitFullscreen) {
+    document.exitFullscreen();
+  }
+}
+
+fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+// blur effect
+function addBlurEffect() {
+  document.querySelector('.words__blurred').classList.add('active');
+  wordsContainer.classList.add('blurred');
+  slash.classList.remove('animated');
+  slash.style.opacity = '0';
+}
+
+function removeBlurEffect() {
+  document.querySelector('.words__blurred').classList.remove('active');
+  document.querySelector('.words__textarea').focus();
+  wordsContainer.classList.remove('blurred');
+  slash.classList.add('animated');
+  slash.style.opacity = '1';
+}
+
+textarea.addEventListener('blur', addBlurEffect);
+textarea.addEventListener('focus', removeBlurEffect);
+
+// check for capsLock
+function checkCapsLock(event) {
+  const string = String.fromCharCode(event.keyCode);
+  const capsLockKey = document.querySelector('.caps__lock-key');
+
+  if ((string.toUpperCase().replace(/[,.;:=+?!1234567890/|]/g, '').trim(' ') === string) !== event.shiftKey) {
+    capsLockKey.classList.add('active');
+  } else {
+    capsLockKey.classList.remove('active');
+  }
+}
+document.addEventListener('keypress', checkCapsLock);
+
+function checkCapsLockOnKeyDown(event) {
+  const capsLockKey = document.querySelector('.caps__lock-key');
+  if (event.keyCode === 20) {
+    capsLockKey.classList.toggle('active');
+  }
+}
+
+document.addEventListener('keydown', checkCapsLockOnKeyDown);

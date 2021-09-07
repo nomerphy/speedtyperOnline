@@ -202,9 +202,8 @@ a {
     min-height: 100px;
     max-height: 180px;
     padding: 0 25px;
-    transition: all 0.35s ease-out;
+    transition: all 0.35s ease-out, background .5s ease-in-out;
     border-radius: 6px;
-    background: var(--light);
     justify-content: flex-start;
     align-items: center;
     flex-wrap: nowrap;
@@ -212,6 +211,10 @@ a {
 
 .words__container.blurred {
     filter: blur(10px);
+}
+
+.words__container.active{
+    background: var(--light);
 }
 
 .words__container .word {
@@ -242,6 +245,75 @@ a {
 
 .words__container .word span {
     transition: all 0.1s ease-out;
+}
+
+.animation__container {
+    position: absolute;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    transition: .2s;
+    border-radius: 6px;
+}
+
+.animation__container.active {
+    transition-delay: 1s;
+}
+
+.animation__container div {
+    position: absolute;
+    display: block;
+}
+
+.animation__container div:nth-child(1) {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, transparent, var(--light));
+}
+
+.animation__container.active div:nth-child(1) {
+  left: 100%;
+  transition: 1s;
+}
+
+.animation__container div:nth-child(3) {
+  bottom: 0;
+  right: -100%;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(270deg, transparent, var(--light));
+}
+.animation__container.active div:nth-child(3) {
+  right: 100%;
+  transition: 1s;
+  transition-delay: .75s;
+}
+.animation__container div:nth-child(2) {
+  top: -100%;
+  right: 0%;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, var(--light));
+}
+.animation__container.active div:nth-child(2) {
+  top: 100%;
+  transition: 1s;
+  transition-delay: .5s;
+}
+.animation__container div:nth-child(4) {
+  bottom: -100%;
+  left: 0;
+  width: 6px;
+  height: 100%;
+  background: linear-gradient(360deg, transparent, var(--light));
+}
+.animation__container.active div:nth-child(4) {
+  bottom: 100%;
+  transition: 1s;
+  transition-delay: 1s;
 }
 
 .words__blurred {
@@ -740,8 +812,11 @@ a {
 
 .timer {
     position: absolute;
-    display: none;
+    top: 5px;
+    left: 5px;
+    /*display: none;*/
     color: var(--light);
+    z-index: 100;
 }
 
 .results {
@@ -1282,39 +1357,59 @@ a {
     border-radius: 6px;
     background: var(--light);
     color: beige;
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
+    transition: transform .5s ease-in-out;
+    visibility: hidden;
 }
 
 .waiting-message {
     justify-content: space-evenly;
 }
 
+.waiting-message.active {
+    visibility: visible;
+}
+
 .waiting-message p {
     color: var(--background);
     width: 210px;
     min-height: 20px;
-    display:  flex;
+    display: flex;
     align-items: flex-end;
 }
 
-.waiting-message p:after{
+.waiting-message p:after {
     content: '';
     width: 3px;
     height: 15px;
-    transform:  translate(3px, -3px);
+    transform: translate(3px, -3px);
     background: var(--background);
     animation: fadeInOut .5s linear infinite alternate;
 }
 
-@keyframes fadeInOut{
+.game-full.active {
+    visibility: visible;
+}
+
+.countdown-message {
+    transform: translateY(-300px);
+}
+
+.countdown-message.active {
+    visibility: visible;
+    transform: translateY(0px);
+}
+
+@keyframes fadeInOut {
     to {
         opacity: 0;
     }
 }
 
-.countdown-message p, span{
+.countdown-message p,
+span {
     color: var(--background);
 }
 
