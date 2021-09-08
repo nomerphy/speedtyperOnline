@@ -1128,6 +1128,16 @@ a {
     opacity: 1;
 }
 
+.pop__up-line{
+    position:  absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--background);
+    transition-timing-function: linear;
+}
+
 .keyboard-layout {
     display: none;
     margin-left: 10px;

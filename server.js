@@ -16,6 +16,10 @@ const databaseWords = require('./words.json')
 let emptyArray = []
 let wordsArray = []
 
+let playerOneWmp, playerTwoWmp, playerOneMistakes, playerTwoMistakes, playerOneAccuracy, playerTwoAccuracy, playerOneTime, playerTwoTime, winnerIndex
+let winningCount = 0
+let endPlayerCount = 0
+
 function createWordsArray(data, arr, container) {
   const wordsAmountArray = [10, 15, 20, 25, 30, 35, 40, 45, 50]
   const randomTotalNumber = Math.floor(Math.random() * wordsAmountArray.length)
@@ -66,6 +70,38 @@ let playerIndex = -1
 
   socket.on('end-result', function(data) {
     console.log(data)
+    if (data.playerIndex == 0) {
+      playerOneWmp = data.info.wpm
+      playerOneMistakes = data.info.mistakes
+      playerOneAccuracy = data.info.accuracy
+      playerOneTime = data.info.time
+      endPlayerCount++
+    }
+
+    if (data.playerIndex == 1) {
+      playerTwoWmp = data.info.wpm
+      playerTwoMistakes = data.info.mistakes
+      playerTwoAccuracy = data.info.accuracy
+      playerTwoTime = data.info.time
+      endPlayerCount++
+    }
+
+    if (endPlayerCount === 2) {
+       checkForWinner()
+       //socket.broadcast.emit('winner', winnerIndex)
+       io.emit('winner', winnerIndex)
+       console.log(`winningCount ${winningCount}`)
+       console.log(winnerIndex)
+
+       setTimeout(() => {
+        endPlayerCount = 0
+        winningCount = 0
+        winnerIndex = 0
+       }, 1000)
+    }
+
+    // console.log(`Player one wmp : ${playerOneWmp}`)
+    // console.log(`Player two wmp : ${playerTwoWmp}`)
   })
 
   socket.on('disconnect', function() {
@@ -76,3 +112,42 @@ let playerIndex = -1
 
   io.emit('send-words', wordsArray)
 })
+
+// winningCount
+function checkForWinner() {
+  if (playerOneWmp > playerTwoWmp) {
+    winningCount -= 1
+  } else if (playerOneWmp === playerTwoWmp) {
+    winningCount += 0
+  } else {
+    winningCount += 1
+  }
+
+  if (playerOneMistakes < playerTwoMistakes) {
+    winningCount -= 2
+  } else if (playerOneMistakes === playerTwoMistakes) {
+    winningCount += 0
+  } else {
+    winningCount += 2
+  }
+
+  if (playerOneAccuracy > playerTwoAccuracy) {
+    winningCount -= 2
+  } else if (playerOneAccuracy === playerTwoAccuracy) {
+    winningCount += 0
+  } else {
+    winningCount += 2
+  }
+
+  if (playerOneTime < playerTwoTime) {
+    winningCount -= 1
+  } else if (playerOneTime === playerTwoTime) {
+    winningCount += 0
+  } else {
+    winningCount += 1
+  }
+
+  const winner = winningCount < 0 ? 0 : 1
+
+  winnerIndex = winner
+}

@@ -25,6 +25,8 @@ const chart = document.querySelector('.chart')
 const screenshotBtn = document.querySelector('.screenshot')
 const wordsHistory = document.querySelector('.results__history')
 const hintsContainer = document.querySelector('.hints')
+const popUp = document.querySelector('.pop__up');
+const popUpText = document.querySelector('.pop__up-text');
 
 const prevHighScore = localStorage.getItem('highscore')
 const fullscreenBtn = document.querySelector('.fullscreenBtn')
@@ -37,6 +39,10 @@ const themePickerBg = document.querySelector('.words__themePicker-bg')
 const findTheme = document.querySelector('.findTheme')
 const randomThemeBtn = document.querySelector('.randomThemeBtn')
 
+const countDownAudio = new Audio()
+countDownAudio.src = './audio/racecountdown.mp3'
+countDownAudio.volume = 0.1
+
 
 function startGame() {
   let seconds = 3
@@ -46,6 +52,10 @@ function startGame() {
 
   if (seconds < 2) {
     animationContainer.classList.add('active')
+  }
+
+  if (seconds === 3) {
+    countDownAudio.play()
   }
 
   if (seconds == 0) {
@@ -97,6 +107,7 @@ let playerIndex
 window.requestAnimationFrame(function() {
   socket.on('player-number', function(playerNumber) {
     playerIndex = playerNumber
+    console.log(playerIndex)
     if (playerNumber == 1) {
       waitingPlayerTwo(true)
       socket.on('player-connect', function() {
@@ -117,6 +128,12 @@ window.requestAnimationFrame(function() {
 
   socket.on('player-disconnect', function(playerIndex) {
     console.log(`${playerIndex} has disconnected`)
+  })
+
+  socket.on('winner', (winner) => {
+    if (winner === Number(playerIndex)) {
+      alert('you win')
+    }
   })
 })
 
@@ -437,8 +454,14 @@ function endResult() {
 
 
   const playerObj = {
-    playerIndex: playerIndex,
-    playerTime: Number(timerHTML.textContent)
+    playerIndex: Number(playerIndex),
+    info: {
+      wpm: roundedWPM,
+      mistakes: incorrectLetters + extraLetters + missedLetters,
+      accuracy: roundAccuracy,
+      time: Number(timeContent)
+    }
+
   }
   socket.emit('end-result', playerObj)
 }
@@ -588,3 +611,86 @@ function checkCapsLockOnKeyDown(event) {
 }
 
 document.addEventListener('keydown', checkCapsLockOnKeyDown);
+
+// popup
+const popUpLine = document.querySelector('.pop__up-line')
+let popUpCounter = 100
+let popUpInterval
+
+function changePopUpLine() {
+  popUpCounter--
+  popUpLine.style.width = `${popUpCounter}%`
+
+  if (popUpCounter === 0) {
+    clearInterval(popUpInterval)
+    popUpCounter = 100
+    popUp.classList.remove('active')
+    popUpText.textContent = ''
+    setTimeout(() => {popUpLine.style.width = '100%'}, 350)
+  }
+}
+
+
+// screenshot function
+function saveScreenshot() {
+  domtoimage.toPng(resultMenuStats).then((dataUrl) => {
+    const img = document.createElement('img');
+    img.src = dataUrl;
+
+    try {
+      fetch(dataUrl)
+      .then(res => res.blob())
+      .then(blob => {
+        window.navigator.clipboard.write([
+          new ClipboardItem({
+            'image/png' : blob
+          })
+        ])
+      })
+
+      popUpText.textContent = 'Copied!'
+      popUp.classList.add('active')
+      popUpInterval = setInterval(changePopUpLine, 25)
+    } catch (err) {
+      window.open(img);
+    }
+  });
+}
+
+screenshotBtn.addEventListener('click', saveScreenshot);
+
+// tooltip
+let tooltipElement
+
+function showTooltip(event) {
+  const { target } = event
+  const tooltipHTML = target.dataset.tooltip
+  if (!tooltipHTML) return false
+  tooltipElement = document.createElement('div')
+  tooltipElement.className = 'tooltip'
+  tooltipElement.innerHTML = tooltipHTML
+  document.body.appendChild(tooltipElement)
+
+  const tooltipCoords = target.getBoundingClientRect()
+  let left = tooltipCoords.left + (target.offsetWidth - tooltipElement.offsetWidth) / 2
+  if (left < 0) left = 0
+
+  let top = tooltipCoords.top - tooltipElement.offsetHeight - 10
+  if (top < 0) {
+    top = tooltipCoords.top + target.offsetHeight + 10
+  }
+
+  tooltipElement.style.left = `${left}px`
+  tooltipElement.style.top = `${top}px`
+}
+
+document.addEventListener('mouseover', showTooltip)
+
+function hideTooltip() {
+  if (tooltipElement) {
+    tooltipElement.remove()
+    tooltipElement = null
+  }
+}
+
+document.addEventListener('mouseout', hideTooltip)
