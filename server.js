@@ -21,7 +21,8 @@ let winningCount = 0
 let endPlayerCount = 0
 
 function createWordsArray(data, arr, container) {
-  const wordsAmountArray = [10, 15, 20, 25, 30, 35, 40, 45, 50]
+  //const wordsAmountArray = [10, 15, 20, 25, 30, 35, 40, 45, 50]
+  const wordsAmountArray = [10, 15]
   const randomTotalNumber = Math.floor(Math.random() * wordsAmountArray.length)
 
   const wordsTotal = wordsAmountArray[randomTotalNumber]

@@ -51,7 +51,7 @@ let confettiDuration
 function startGame() {
   const countdownMessageLine = document.querySelector('.countdown-message__line')
   altText.classList.add('active')
-  let seconds = 11
+  let seconds = 4 //11
   const intervalId = setInterval(function() {
   seconds--
   countdownMessage(true, seconds)
@@ -176,12 +176,13 @@ const move = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 async function startWriting() {
   const strings = [
-    'Waiting for Player 2',
+   'Waiting for Player 2',
    'Tired?',
    'Check your layout',
    'Waiting for Opponent',
    'You are beautiful',
    'He is coming',
+   `${window.location.origin}`,
    'Waiting for Player 2',
    'How are you today?',
    'Waiting for Noob',
@@ -193,9 +194,9 @@ async function startWriting() {
     for (let i = 0; i < strings.length; ++i) {
       const string = strings[i]
       await write(string)
-      await move(1000)
+      await move(900)
       await erase()
-      await move(1000)
+      await move(900)
     }
   }
 }
