@@ -27,7 +27,7 @@ const wordsHistory = document.querySelector('.results__history')
 const hintsContainer = document.querySelector('.hints')
 const popUp = document.querySelector('.pop__up');
 const popUpText = document.querySelector('.pop__up-text');
-
+const altText = document.querySelector('.alt-text')
 const prevHighScore = localStorage.getItem('highscore')
 const fullscreenBtn = document.querySelector('.fullscreenBtn')
 const animationContainer = document.querySelector('.animation__container')
@@ -39,23 +39,30 @@ const themePickerBg = document.querySelector('.words__themePicker-bg')
 const findTheme = document.querySelector('.findTheme')
 const randomThemeBtn = document.querySelector('.randomThemeBtn')
 
-const countDownAudio = new Audio()
-countDownAudio.src = './audio/racecountdown.mp3'
-countDownAudio.volume = 0.1
+  const successIcon = `<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M30 60C46.5685 60 60 46.5685 60 30C60 13.4315 46.5685 0 30 0C13.4315 0 0 13.4315 0 30C0 46.5685 13.4315 60 30 60ZM45.7591 21.8542C46.5237 21.0571 46.4973 19.791 45.7002 19.0264C44.903 18.2618 43.637 18.2881 42.8723 19.0853L26.1252 36.5449L17.3897 28.0977C16.5956 27.3299 15.3295 27.3512 14.5617 28.1452C13.7938 28.9392 13.8151 30.2054 14.6091 30.9732L24.7882 40.8163C25.1706 41.186 25.6844 41.3882 26.2161 41.3782C26.7479 41.3682 27.2537 41.1468 27.6219 40.763L45.7591 21.8542Z" fill="#222222" />
+      </svg>`
+const errorIcon = `<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M30 0C13.4583 0 0 13.4583 0 30C0 46.5417 13.4583 60 30 60C46.5417 60 60 46.5417 60 30C60 13.4583 46.5417 0 30 0ZM42.1336 38.5985C42.6219 39.0866 42.6219 39.8781 42.1336 40.3663L40.3664 42.1336C39.8781 42.6217 39.0868 42.6217 38.5985 42.1336L30 33.5352L21.4015 42.1337C20.9132 42.6218 20.1219 42.6218 19.6336 42.1337L17.8663 40.3663C17.378 39.8782 17.378 39.0867 17.8663 38.5985L26.4648 29.9999L17.8663 21.4014C17.378 20.9133 17.378 20.1218 17.8663 19.6336L19.6336 17.8662C20.1219 17.3781 20.9132 17.3781 21.4015 17.8662L30 26.4647L38.5985 17.8662C39.0868 17.3781 39.8781 17.3781 40.3664 17.8662L42.1337 19.6336C42.622 20.1217 42.622 20.9132 42.1337 21.4014L33.5352 29.9999L42.1336 38.5985Z" fill="#222222"/>
+</svg>`
 
+let confettiDuration
 
 function startGame() {
-  let seconds = 3
+  const countdownMessageLine = document.querySelector('.countdown-message__line')
+  altText.classList.add('active')
+  let seconds = 11
   const intervalId = setInterval(function() {
   seconds--
   countdownMessage(true, seconds)
+  countdownMessageLine.style.width = `${seconds * 10}%`
 
   if (seconds < 2) {
     animationContainer.classList.add('active')
   }
 
   if (seconds === 3) {
-    countDownAudio.play()
+    createAudioCountdown()
   }
 
   if (seconds == 0) {
@@ -79,6 +86,15 @@ function startGame() {
     }
   }
   }, 1000)
+}
+
+function createAudioCountdown() {
+  const audioArray = ['./audio/racecountdown.mp3']
+  const randomAudio = Math.floor(Math.random(audioArray))
+  const audio = new Audio()
+  audio.src = audioArray[randomAudio]
+  audio.volume = 0.1
+  audio.play()
 }
 
 function messageVisibility(className, show) {
@@ -132,14 +148,30 @@ window.requestAnimationFrame(function() {
 
   socket.on('winner', (winner) => {
     if (winner === Number(playerIndex)) {
-      alert('you win')
+      popUpText.textContent = 'You win!'
+      popUp.insertAdjacentHTML('afterbegin', successIcon)
+      popUp.classList.add('active')
+      popUpInterval = setInterval(changePopUpLine, 25)
+      confettiDuration = Date.now() + 4000
+      startConfetti()
+
+      const audiosArray = ['./audio/win1.wav', './audio/win2.wav', './audio/win3.mp3']
+      const randomAudio = Math.floor(Math.random() * audiosArray.length)
+
+      const audio = new Audio()
+      audio.src = audiosArray[randomAudio]
+      audio.volume = 0.1
+      audio.play()
+    } else {
+      popUp.insertAdjacentHTML('afterbegin', errorIcon)
+      popUpText.textContent = 'You lose!'
+      popUp.classList.add('active')
+      popUpInterval = setInterval(changePopUpLine, 25)
     }
   })
 })
 
 // loader animation
-const altText = document.querySelector('.waiting-message p')
-
 const move = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 async function startWriting() {
@@ -161,16 +193,16 @@ async function startWriting() {
     for (let i = 0; i < strings.length; ++i) {
       const string = strings[i]
       await write(string)
-      await move(750)
+      await move(1000)
       await erase()
-      await move(750)
+      await move(1000)
     }
   }
 }
 
 async function erase() {
   while (altText.textContent.length) {
-    await move(100)
+    await move(125)
     altText.textContent = altText.textContent.substring(0, altText.textContent.length -1)
   }
 }
@@ -180,7 +212,7 @@ async function write(text) {
 
   while(index < text.length) {
     index++
-    await move(100)
+    await move(125)
     altText.textContent = text.substring(0, index)
   }
 }
@@ -694,3 +726,28 @@ function hideTooltip() {
 }
 
 document.addEventListener('mouseout', hideTooltip)
+
+// confetti
+const confettiColors = ['#badc58', '#ffffff', '#f9ca24', '#d63031']
+
+function startConfetti() {
+  confetti({
+    particleCount: 2,
+    angle: 60,
+    spread: 200,
+    origin: { y: 0 },
+    colors: confettiColors,
+  });
+
+  confetti({
+    particleCount: 2,
+    angle: 120,
+    spread: 200,
+    origin: { y: 0 },
+    colors: confettiColors,
+  });
+
+  if (Date.now() < confettiDuration) {
+    requestAnimationFrame(startConfetti);
+  }
+}

@@ -132,19 +132,19 @@ function checkForWinner() {
   }
 
   if (playerOneAccuracy > playerTwoAccuracy) {
-    winningCount -= 2
+    winningCount -= 1.5
   } else if (playerOneAccuracy === playerTwoAccuracy) {
     winningCount += 0
   } else {
-    winningCount += 2
+    winningCount += 1.5
   }
 
   if (playerOneTime < playerTwoTime) {
-    winningCount -= 1
+    winningCount -= 2
   } else if (playerOneTime === playerTwoTime) {
     winningCount += 0
   } else {
-    winningCount += 1
+    winningCount += 2
   }
 
   const winner = winningCount < 0 ? 0 : 1

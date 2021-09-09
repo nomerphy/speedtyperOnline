@@ -213,7 +213,7 @@ a {
     filter: blur(10px);
 }
 
-.words__container.active{
+.words__container.active {
     background: var(--light);
 }
 
@@ -275,45 +275,50 @@ a {
 }
 
 .animation__container.active div:nth-child(1) {
-  left: 100%;
-  transition: 1s;
+    left: 100%;
+    transition: 1s;
 }
 
 .animation__container div:nth-child(3) {
-  bottom: 0;
-  right: -100%;
-  width: 100%;
-  height: 6px;
-  background: linear-gradient(270deg, transparent, var(--light));
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(270deg, transparent, var(--light));
 }
+
 .animation__container.active div:nth-child(3) {
-  right: 100%;
-  transition: 1s;
-  transition-delay: .75s;
+    right: 100%;
+    transition: 1s;
+    transition-delay: .75s;
 }
+
 .animation__container div:nth-child(2) {
-  top: -100%;
-  right: 0%;
-  width: 6px;
-  height: 100%;
-  background: linear-gradient(180deg, transparent, var(--light));
+    top: -100%;
+    right: 0%;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, var(--light));
 }
+
 .animation__container.active div:nth-child(2) {
-  top: 100%;
-  transition: 1s;
-  transition-delay: .5s;
+    top: 100%;
+    transition: 1s;
+    transition-delay: .5s;
 }
+
 .animation__container div:nth-child(4) {
-  bottom: -100%;
-  left: 0;
-  width: 6px;
-  height: 100%;
-  background: linear-gradient(360deg, transparent, var(--light));
+    bottom: -100%;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, var(--light));
 }
+
 .animation__container.active div:nth-child(4) {
-  bottom: 100%;
-  transition: 1s;
-  transition-delay: 1s;
+    bottom: 100%;
+    transition: 1s;
+    transition-delay: 1s;
 }
 
 .words__blurred {
@@ -1080,9 +1085,9 @@ a {
     top: 15px;
     right: 15px;
     display: flex;
-    width: 240px;
+    width: 210px;
     height: auto;
-    min-height: 60px;
+    min-height: 50px;
     transition: all 0.35s ease-out;
     transform: translateY(-20px);
     pointer-events: none;
@@ -1090,10 +1095,11 @@ a {
     border-radius: 6px;
     background: var(--light);
     align-items: center;
+    justify-content: flex-start;
 }
 
 .pop__up svg {
-    width: 32px;
+    width: 30px;
     margin-left: 10px;
 }
 
@@ -1128,8 +1134,8 @@ a {
     opacity: 1;
 }
 
-.pop__up-line{
-    position:  absolute;
+.pop__up-line {
+    position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -1382,23 +1388,6 @@ a {
     visibility: visible;
 }
 
-.waiting-message p {
-    color: var(--background);
-    width: 210px;
-    min-height: 20px;
-    display: flex;
-    align-items: flex-end;
-}
-
-.waiting-message p:after {
-    content: '';
-    width: 3px;
-    height: 15px;
-    transform: translate(3px, -3px);
-    background: var(--background);
-    animation: fadeInOut .5s linear infinite alternate;
-}
-
 .game-full.active {
     visibility: visible;
 }
@@ -1412,10 +1401,14 @@ a {
     transform: translateY(0px);
 }
 
-@keyframes fadeInOut {
-    to {
-        opacity: 0;
-    }
+.countdown-message__line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--background);
+    transition-timing-function: linear;
 }
 
 .countdown-message p,
@@ -1457,5 +1450,37 @@ span {
         opacity: .3;
         box-shadow: 12px 0px 0px 0px var(--background),
             24px 0px 0px 0px var(--background);
+    }
+}
+
+.alt-text{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--light);
+    font-size: 34px;
+    width: auto;
+    min-height: 44px;
+    display: flex;
+    align-items: flex-end;
+}
+
+.alt-text:after{
+    content: '';
+    width: 3px;
+    height: 30px;
+    transform: translate(4px, -5px);
+    background: var(--light);
+    animation: fadeInOut .5s linear infinite alternate;
+}
+
+.alt-text.active{
+    display: none;
+}
+
+@keyframes fadeInOut {
+    to {
+        opacity: 0;
     }
 }
