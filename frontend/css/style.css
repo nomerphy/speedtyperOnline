@@ -129,7 +129,7 @@ a {
 }
 
 .header__buttons .fullscreenBtn:hover svg {
-    transform: scale(0.9) rotate(90deg);
+    transform: scale(1.15) rotate(90deg);
 }
 
 .words {
@@ -175,6 +175,52 @@ a {
     display: flex;
     width: 100%;
     min-height: 100px;
+}
+
+.words__main-progress{
+    margin-top:  40px;
+    position:  relative;
+    width: 100%;
+    height: 180px;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    transition: all .35s ease-out;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.words__main-progress.active{
+    opacity: 1;
+}
+
+.player__one, .player__two{
+    width:  100%;
+    height:  100%;
+    display:  flex;
+    align-items: flex-end;
+    border-bottom: 2px dashed var(--contrast);
+}
+
+.player__one-wrap, .player__two-wrap{
+    position: absolute;
+    width: auto;
+    height: 80px;
+    display:  flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    transition: all .35s linear;
+}
+
+.player__one-wrap p, .player__two-wrap p {
+    margin-left:  10px;
+    font-size: 16px;
+    color:  var(--contrast);
+    transform:  translateX(-10px);
+}
+
+.player__one-wrap p{
+    font-weight: bold;
 }
 
 .words__textarea {
@@ -271,7 +317,7 @@ a {
     left: -100%;
     width: 100%;
     height: 6px;
-    background: linear-gradient(90deg, transparent, var(--light));
+    background: linear-gradient(90deg, transparent, var(--contrast));
 }
 
 .animation__container.active div:nth-child(1) {
@@ -284,7 +330,7 @@ a {
     right: -100%;
     width: 100%;
     height: 6px;
-    background: linear-gradient(270deg, transparent, var(--light));
+    background: linear-gradient(270deg, transparent, var(--contrast));
 }
 
 .animation__container.active div:nth-child(3) {
@@ -298,7 +344,7 @@ a {
     right: 0%;
     width: 6px;
     height: 100%;
-    background: linear-gradient(180deg, transparent, var(--light));
+    background: linear-gradient(180deg, transparent, var(--contrast));
 }
 
 .animation__container.active div:nth-child(2) {
@@ -312,7 +358,7 @@ a {
     left: 0;
     width: 6px;
     height: 100%;
-    background: linear-gradient(360deg, transparent, var(--light));
+    background: linear-gradient(360deg, transparent, var(--contrast));
 }
 
 .animation__container.active div:nth-child(4) {
@@ -350,132 +396,6 @@ a {
 .words__blurred p {
     font-size: 20px;
     color: var(--background);
-}
-
-.words__reload {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-}
-
-.words__reload .reload__btn {
-    display: grid;
-    width: 66px;
-    height: 46px;
-    cursor: pointer;
-    user-select: none;
-    transition: all 0.35s ease-out;
-    border-radius: 6px;
-    background: var(--light);
-    place-items: center;
-}
-
-.words__reload .reload__btn svg {
-    transition: 0.3s ease-out;
-    pointer-events: none;
-}
-
-.words__reload .reload__btn:hover svg {
-    transform: rotate(45deg);
-}
-
-.words__reload .reload__btn:hover {
-    opacity: 0.9;
-}
-
-.words__reload .reload__btn:active {
-    transform: scale(0.9);
-}
-
-.words__keyboard {
-    display: none;
-    flex-direction: column;
-    width: auto;
-    height: auto;
-    pointer-events: none;
-    align-self: center;
-}
-
-.words__keyboard.active {
-    display: block;
-}
-
-.words__keyboard-line {
-    display: flex;
-    width: 100%;
-    height: 32px;
-    margin-top: 6px;
-    justify-content: center;
-    align-items: center;
-}
-
-.words__keyboard-line .key {
-    position: relative;
-    display: flex;
-    width: 32px;
-    height: 32px;
-    margin: 3px;
-    transition: all 0.1s ease-out;
-    pointer-events: none;
-    color: var(--light);
-    border: 1px solid var(--light);
-    border-radius: 4px;
-    justify-content: center;
-    align-items: center;
-}
-
-.words__keyboard-line .key.active {
-    color: var(--background);
-    background: var(--light);
-}
-
-.words__keyboard-line .f:before,
-.words__keyboard-line .j:before {
-    position: absolute;
-    bottom: 15%;
-    width: 18px;
-    height: 1px;
-    content: '';
-    background: var(--light);
-}
-
-.words__keyboard-line .space {
-    position: relative;
-    display: flex;
-    width: 273px;
-    height: 32px;
-    margin: 3px;
-    pointer-events: none;
-    color: var(--light);
-    border: 1px solid var(--light);
-    border-radius: 4px;
-    justify-content: center;
-    align-items: center;
-}
-
-.words__keyHelper {
-    display: flex;
-    width: 100%;
-    height: 60px;
-    justify-content: center;
-    align-items: center;
-}
-
-.words__keyHelper.active {
-    display: none;
-}
-
-.words__keyHelper p {
-    color: var(--contrast);
-}
-
-.words__keyHelper p span {
-    padding: 6px 14px;
-    transition: all 0.35s ease-out;
-    color: var(--background);
-    border-radius: 4px;
-    background: var(--light);
 }
 
 .words__themePicker-bg {
@@ -541,10 +461,9 @@ a {
     font-size: 20px;
     width: 100%;
     height: 40px;
-    transition: all 0.35s ease-out;
     border: none;
     outline: none;
-    background: var(--light);
+    background: transparent;
 }
 
 .words__themePicker .findTheme::placeholder {
@@ -1464,6 +1383,8 @@ span {
     min-height: 44px;
     display: flex;
     align-items: flex-end;
+    pointer-events: none;
+    user-select: none;
 }
 
 .alt-text:after{
@@ -1482,5 +1403,31 @@ span {
 @keyframes fadeInOut {
     to {
         opacity: 0;
+    }
+}
+
+.key{
+    width: 60px;
+    height: 60px;
+    position:  absolute;
+    border-radius: 6px;
+    display:  grid;
+    place-items: center;
+    font-size: 20px;
+    font-family: inherit;
+    clip-path: circle(0% at 50% 50%);
+    transform: rotate(45deg);
+    transition: all .35s ease-out;
+    animation: spawnIn .35s ease-in-out forwards;
+}
+
+.key p {
+    color:  var(--background);
+}
+
+@keyframes spawnIn{
+    to {
+        clip-path:  circle(100%);
+        transform: rotate(0deg);
     }
 }

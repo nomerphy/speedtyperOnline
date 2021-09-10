@@ -111,6 +111,28 @@ let playerIndex = -1
       connections[playerIndex] = null
   })
 
+  let playerOneProgress, playerTwoProgress, playerOneCurrentWpm, playerTwoCurrentWpm
+
+  socket.on('player-progress', function(progress) {
+    if (progress.playerIndex == 0) {
+      playerOneProgress = (progress.wordIndex / progress.wordLength) * 100
+      playerOneCurrentWpm = progress.currentWpm
+    }
+
+    if (progress.playerIndex == 1) {
+      playerTwoProgress = (progress.wordIndex / progress.wordLength) * 100
+      playerTwoCurrentWpm = progress.currentWpm
+    }
+
+    const progressObj = {
+      playerOneProgress: playerOneProgress,
+      playerOneCurrentWpm: playerOneCurrentWpm,
+      playerTwoProgress: playerTwoProgress,
+      playerTwoCurrentWpm: playerTwoCurrentWpm
+    }
+    io.emit('send-progress', progressObj)
+  })
+
   io.emit('send-words', wordsArray)
 })
 

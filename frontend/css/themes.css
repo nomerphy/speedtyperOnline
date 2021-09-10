@@ -288,16 +288,6 @@ body.steam{
 	--incorrect: #F50200;
 }
 
-body.peachy{
-	--background: linear-gradient(90deg, #ed6ea0 30%, #ec8c69 100%);
-	--light: #eee;
-	--dark: #eee;
-	--text: #ec8c69;
-	--contrast: #eee;
-	--correct: #00b894;
-	--incorrect: #F50200;
-}
-
 body.spaceless{
 	--background: #1B1464;
 	--light: linear-gradient(90deg, #cc208e 5%, #6713d2 100%);

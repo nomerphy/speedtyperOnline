@@ -31,6 +31,7 @@ const altText = document.querySelector('.alt-text')
 const prevHighScore = localStorage.getItem('highscore')
 const fullscreenBtn = document.querySelector('.fullscreenBtn')
 const animationContainer = document.querySelector('.animation__container')
+const playerProgressContainer = document.querySelector('.words__main-progress')
 
 //themes
 const themeChanger = document.querySelector('.theme__changer')
@@ -62,6 +63,7 @@ function startGame() {
   }
 
   if (seconds === 3) {
+    document.removeEventListener('keypress', spawnKey)
     createAudioCountdown()
   }
 
@@ -74,8 +76,10 @@ function startGame() {
     } else {
         deployWords(wordsArray)
         wordsContainer.classList.add('active')
-        document.addEventListener('keyup', deleteLetterIndex)
-        document.addEventListener('keydown', nextWordActive)
+        playerProgressContainer.classList.add('active')
+        document.addEventListener('keydown', sendWordsProgress)
+        document.addEventListener('keydown', deleteLetterIndex)
+        document.addEventListener('keypress', nextWordActive)
         document.addEventListener('keydown', startIntervalOnKey)
         textarea.addEventListener('input', addExtraLetter)
         textarea.addEventListener('input', checkIsWordCorrect)
@@ -117,6 +121,11 @@ function countdownMessage(show, number) {
   const countdownNumber = document.querySelector('.countdown-number')
   countdownNumber.textContent = number
 }
+
+const playerOneContainer = document.querySelector('.player__one-wrap')
+const playerTwoContainer = document.querySelector('.player__two-wrap')
+const playerOneText = document.querySelector('.player__one-wrap p')
+const playerTwoText = document.querySelector('.player__two-wrap p')
 
 let playerIndex
 
@@ -167,6 +176,18 @@ window.requestAnimationFrame(function() {
       popUpText.textContent = 'You lose!'
       popUp.classList.add('active')
       popUpInterval = setInterval(changePopUpLine, 25)
+    }
+  })
+
+  socket.on('send-progress', function(data) {
+    if (Number(playerIndex) === 0) {
+      playerOneContainer.style.left = `${data.playerOneProgress}%`
+      playerTwoContainer.style.left = `${data.playerTwoProgress}%`
+    }
+
+    if (Number(playerIndex) === 1) {
+      playerOneContainer.style.left = `${data.playerTwoProgress}%`
+      playerTwoContainer.style.left = `${data.playerOneProgress}%`
     }
   })
 })
@@ -433,6 +454,7 @@ Chart.defaults.global.defaultFontFamily = getComputedStyle(document.body).fontFa
 function endResult() {
   textarea.removeEventListener('input', checkIsWordCorrect)
   textarea.removeEventListener('blur', addBlurEffect);
+  document.removeEventListener('keydown', sendWordsProgress)
 
   const timeContent = timerHTML.textContent
   const time = Number((timeContent / 60).toFixed(2))
@@ -484,14 +506,12 @@ function endResult() {
     resultMenuStats.classList.add('active');
   }, 250);
 
-
-
   const playerObj = {
     playerIndex: Number(playerIndex),
     info: {
       wpm: roundedWPM,
       mistakes: incorrectLetters + extraLetters + missedLetters,
-      accuracy: roundAccuracy,
+      accuracy: Number(rawAccuracy.toFixed(2)),
       time: Number(timeContent)
     }
 
@@ -552,7 +572,6 @@ const themesArray = [
   'radiance',
   'faceit',
   'steam',
-  'peachy',
   'spaceless',
   'sun',
   'lilac',
@@ -570,7 +589,7 @@ const themesArray = [
 
 // random themes
 function checkTheme() {
-  const currentTheme = null
+  const currentTheme = localStorage.getItem('theme')
   if (currentTheme === null) {
     const randomThemeNum = Math.floor(Math.random() * themesArray.length);
     document.body.className = themesArray[randomThemeNum];
@@ -584,6 +603,95 @@ function checkTheme() {
 }
 
 document.addEventListener('DOMContentLoaded', checkTheme);
+
+// sort themes
+function sortThemes() {
+  const themesContainer = document.querySelector('.themes');
+  const sortedThemes = themesArray.sort((a, b) => {
+    if (a < b) return -1;
+    else if (a > b) return 1;
+    return 0;
+  });
+
+  for (let i = 0; i < sortedThemes.length; ++i) {
+    const div = document.createElement('div');
+    div.className = 'theme';
+    div.innerHTML = `<p>${sortedThemes[i]}</p>`;
+    themesContainer.append(div);
+  }
+}
+
+sortThemes();
+
+themeChanger.onclick = () => {
+  themePickerBg.classList.add('active');
+  themePicker.classList.add('active');
+};
+
+themePickerBg.onclick = () => {
+  themePickerBg.classList.remove('active');
+  themePicker.classList.remove('active');
+  findTheme.value = '';
+  searchTheme();
+  removeBlurEffect();
+};
+
+const themes = document.querySelectorAll('.theme');
+
+for (let i = 0; i < themes.length; ++i) {
+  themes[i].addEventListener('mouseenter', () => {
+    document.body.className = `${themes[i].textContent}`;
+  });
+
+  themes[i].addEventListener('mouseleave', removeThemeTextContent);
+
+  themes[i].addEventListener('click', () => {
+    themes[i].removeEventListener('mouseleave', removeThemeTextContent);
+    document.body.classList.add(`${themes[i].textContent}`);
+    themePickerBg.classList.remove('active');
+    themePicker.classList.remove('active');
+    themeChanger.textContent = `${themes[i].textContent}`;
+    localStorage.setItem('theme', themes[i].textContent);
+    checkTheme();
+    removeBlurEffect();
+
+    setTimeout(() => {
+      themes[i].addEventListener('mouseleave', removeThemeTextContent);
+      findTheme.value = '';
+      searchTheme();
+    }, 1000);
+  });
+}
+
+function removeThemeTextContent() {
+  const currentTheme = localStorage.getItem('theme');
+  document.body.className = currentTheme;
+  themeChanger.textContent = currentTheme || 'original_light';
+}
+
+randomThemeBtn.onclick = () => {
+  localStorage.removeItem('theme');
+  document.location.reload();
+};
+
+function searchTheme() {
+  const input = document.querySelector('.findTheme');
+  const inputValue = input.value.toLowerCase();
+  const theme = document.querySelectorAll('.theme');
+  let currentTheme;
+
+  for (let i = 0; i < theme.length; ++i) {
+    currentTheme = theme[i].textContent;
+    if (currentTheme.toLowerCase().indexOf(inputValue) > -1) {
+      theme[i].style.display = '';
+    } else {
+      theme[i].style.display = 'none';
+    }
+  }
+}
+
+findTheme.addEventListener('keyup', searchTheme);
+
 
 // words history
 function toggleWordHistory() {
@@ -751,4 +859,58 @@ function startConfetti() {
   if (Date.now() < confettiDuration) {
     requestAnimationFrame(startConfetti);
   }
+}
+
+// preloader onkeydown game
+
+function spawnKey(event) {
+  const keyContainer = document.createElement('div')
+  keyContainer.className = 'key'
+  const keyText = document.createElement('p')
+
+  keyText.textContent = String.fromCharCode(event.keyCode)
+
+  const randomColor = '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16)
+  keyContainer.style.backgroundColor = randomColor
+  keyContainer.style.boxShadow = `0 0 10px ${randomColor}`
+
+  keyContainer.style.left = `${Math.floor(Math.random() * window.innerWidth)}px`
+  keyContainer.style.top = `${Math.floor(Math.random() * window.innerHeight)}px`
+
+  keyContainer.appendChild(keyText)
+  document.body.append(keyContainer)
+
+  setTimeout(() => {
+    keyContainer.style.opacity = '0'
+  }, 800)
+
+  setTimeout(() => {
+    document.body.removeChild(keyContainer)
+  }, 900)
+}
+
+document.addEventListener('keypress', spawnKey)
+
+// send current word progress to the server
+
+function sendWordsProgress() {
+  const timeContent = timerHTML.textContent
+  const time = Number((timeContent / 60).toFixed(2))
+  const letterLength = wordsContainer.querySelectorAll('span').length;
+  const incorrectLetters = wordsContainer.querySelectorAll('.incorrect').length;
+  const extraLetters = wordsContainer.querySelectorAll('.extra').length;
+  const correctLetters = wordsContainer.querySelectorAll('.correct').length;
+  const missedLetters = letterLength - (correctLetters + incorrectLetters);
+  const avgWords = wordsContainer.children.length;
+  const avarageWordsAmount = (letterLength + wordIndex) / avgWords;
+  const wpm = (((letterLength + wordIndex) - (incorrectLetters + missedLetters + extraLetters)) / avarageWordsAmount) / time;
+
+  const playerProgress = {
+    playerIndex: Number(playerIndex),
+    currentWpm: Number(wpm.toFixed(2)),
+    wordIndex: wordIndex,
+    wordLength: wordsContainer.children.length
+  }
+
+  socket.emit('player-progress', playerProgress)
 }
