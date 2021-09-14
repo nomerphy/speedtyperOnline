@@ -124,6 +124,10 @@ let playerIndex = -1
       console.log(`Player ${playerIndex} disconnected`)
       socket.broadcast.emit('player-disconnect', playerIndex)
       connections[playerIndex] = null
+      endPlayerCount = 0
+      winningCount = 0
+      winnerIndex = 0
+      playersRequestedForRestart = 0
   })
 
   let playerOneProgress, playerTwoProgress, playerOneCurrentWpm, playerTwoCurrentWpm

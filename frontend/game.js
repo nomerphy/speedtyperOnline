@@ -35,6 +35,12 @@ const animationContainer = document.querySelector('.animation__container')
 const playerProgressContainer = document.querySelector('.words__main-progress')
 const restartBtn = document.querySelector('.restart')
 
+const trafficLight = document.querySelector('.traffic__light')
+
+const trafficLightGreen = trafficLight.querySelector('.circle.green')
+const trafficLightYellow = trafficLight.querySelector('.circle.yellow')
+const trafficLightRed = trafficLight.querySelector('.circle.red')
+
 //themes
 const themeChanger = document.querySelector('.theme__changer')
 const themePicker = document.querySelector('.words__themePicker')
@@ -54,6 +60,8 @@ let confettiDuration
 function startGame() {
   const countdownMessageLine = document.querySelector('.countdown-message__line')
   altText.classList.add('active')
+  trafficLight.classList.add('active')
+  trafficLightRed.classList.add('active')
   let seconds = 4 //11
   const intervalId = setInterval(function() {
   seconds--
@@ -69,9 +77,20 @@ function startGame() {
     createAudioCountdown()
   }
 
+  if (seconds === 2) {
+    trafficLightRed.classList.remove('active')
+    trafficLightYellow.classList.add('active')
+  }
+
+  if (seconds === 1) {
+    trafficLightYellow.classList.remove('active')
+    trafficLightGreen.classList.add('active')
+  }
+
   if (seconds == 0) {
     clearInterval(intervalId)
     countdownMessage(false, 0)
+    trafficLight.classList.remove('active')
 
     if (remoteGame !== null && localGame !== null) {
         localGame.restart()
@@ -653,6 +672,7 @@ const themesArray = [
   'phoenix',
   'night_call',
   'fresh',
+  'discord',
 ]
 
 // random themes

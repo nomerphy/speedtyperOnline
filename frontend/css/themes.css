@@ -420,7 +420,7 @@ body.greenwild{
 
 body.github{
 	--background: #0D1117;
-	--light: #161B22;
+	--light: #5F666F;
 	--dark: #5F666F;
 	--text: #fefefe;
 	--contrast: #5F666F;
@@ -534,6 +534,16 @@ body.fresh{
 	--dark: #37BD73;
 	--text: #349A62;
 	--contrast: #37BD73;
+	--correct: #FFFFFF;
+	--incorrect: #FE666F;
+}
+
+body.discord{
+	--background: #5865F2;
+	--light: #23272A;
+	--dark: #23272A;
+	--text: #5865F2;
+	--contrast: #23272A;
 	--correct: #FFFFFF;
 	--incorrect: #FE666F;
 }
