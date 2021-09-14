@@ -25,13 +25,15 @@ const chart = document.querySelector('.chart')
 const screenshotBtn = document.querySelector('.screenshot')
 const wordsHistory = document.querySelector('.results__history')
 const hintsContainer = document.querySelector('.hints')
-const popUp = document.querySelector('.pop__up');
-const popUpText = document.querySelector('.pop__up-text');
+const popUp = document.querySelector('.pop__up')
+const popUpText = document.querySelector('.pop__up-text')
+const popUpIcon = document.querySelector('.pop__up svg')
 const altText = document.querySelector('.alt-text')
 const prevHighScore = localStorage.getItem('highscore')
 const fullscreenBtn = document.querySelector('.fullscreenBtn')
 const animationContainer = document.querySelector('.animation__container')
 const playerProgressContainer = document.querySelector('.words__main-progress')
+const restartBtn = document.querySelector('.restart')
 
 //themes
 const themeChanger = document.querySelector('.theme__changer')
@@ -40,12 +42,12 @@ const themePickerBg = document.querySelector('.words__themePicker-bg')
 const findTheme = document.querySelector('.findTheme')
 const randomThemeBtn = document.querySelector('.randomThemeBtn')
 
-  const successIcon = `<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M30 60C46.5685 60 60 46.5685 60 30C60 13.4315 46.5685 0 30 0C13.4315 0 0 13.4315 0 30C0 46.5685 13.4315 60 30 60ZM45.7591 21.8542C46.5237 21.0571 46.4973 19.791 45.7002 19.0264C44.903 18.2618 43.637 18.2881 42.8723 19.0853L26.1252 36.5449L17.3897 28.0977C16.5956 27.3299 15.3295 27.3512 14.5617 28.1452C13.7938 28.9392 13.8151 30.2054 14.6091 30.9732L24.7882 40.8163C25.1706 41.186 25.6844 41.3882 26.2161 41.3782C26.7479 41.3682 27.2537 41.1468 27.6219 40.763L45.7591 21.8542Z" fill="#222222" />
-      </svg>`
-const errorIcon = `<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+const successIcon = `
+<path fill-rule="evenodd" clip-rule="evenodd" d="M30 60C46.5685 60 60 46.5685 60 30C60 13.4315 46.5685 0 30 0C13.4315 0 0 13.4315 0 30C0 46.5685 13.4315 60 30 60ZM45.7591 21.8542C46.5237 21.0571 46.4973 19.791 45.7002 19.0264C44.903 18.2618 43.637 18.2881 42.8723 19.0853L26.1252 36.5449L17.3897 28.0977C16.5956 27.3299 15.3295 27.3512 14.5617 28.1452C13.7938 28.9392 13.8151 30.2054 14.6091 30.9732L24.7882 40.8163C25.1706 41.186 25.6844 41.3882 26.2161 41.3782C26.7479 41.3682 27.2537 41.1468 27.6219 40.763L45.7591 21.8542Z" fill="#222222" />
+`
+const errorIcon = `
 <path d="M30 0C13.4583 0 0 13.4583 0 30C0 46.5417 13.4583 60 30 60C46.5417 60 60 46.5417 60 30C60 13.4583 46.5417 0 30 0ZM42.1336 38.5985C42.6219 39.0866 42.6219 39.8781 42.1336 40.3663L40.3664 42.1336C39.8781 42.6217 39.0868 42.6217 38.5985 42.1336L30 33.5352L21.4015 42.1337C20.9132 42.6218 20.1219 42.6218 19.6336 42.1337L17.8663 40.3663C17.378 39.8782 17.378 39.0867 17.8663 38.5985L26.4648 29.9999L17.8663 21.4014C17.378 20.9133 17.378 20.1218 17.8663 19.6336L19.6336 17.8662C20.1219 17.3781 20.9132 17.3781 21.4015 17.8662L30 26.4647L38.5985 17.8662C39.0868 17.3781 39.8781 17.3781 40.3664 17.8662L42.1337 19.6336C42.622 20.1217 42.622 20.9132 42.1337 21.4014L33.5352 29.9999L42.1336 38.5985Z" fill="#222222"/>
-</svg>`
+`
 
 let confettiDuration
 
@@ -79,7 +81,7 @@ function startGame() {
         playerProgressContainer.classList.add('active')
         document.addEventListener('keydown', sendWordsProgress)
         document.addEventListener('keydown', deleteLetterIndex)
-        document.addEventListener('keypress', nextWordActive)
+        document.addEventListener('keydown', nextWordActive)
         document.addEventListener('keydown', startIntervalOnKey)
         textarea.addEventListener('input', addExtraLetter)
         textarea.addEventListener('input', checkIsWordCorrect)
@@ -126,6 +128,8 @@ const playerOneContainer = document.querySelector('.player__one-wrap')
 const playerTwoContainer = document.querySelector('.player__two-wrap')
 const playerOneText = document.querySelector('.player__one-wrap p')
 const playerTwoText = document.querySelector('.player__two-wrap p')
+const playerOneWpm = document.querySelector('.player__one-wpm')
+const playerTwoWpm = document.querySelector('.player__two-wpm')
 
 let playerIndex
 
@@ -152,13 +156,26 @@ window.requestAnimationFrame(function() {
   })
 
   socket.on('player-disconnect', function(playerIndex) {
-    console.log(`${playerIndex} has disconnected`)
+    popUp.classList.add('active')
+    popUpIcon.innerHTML = errorIcon
+    popUpText.textContent = 'Opponent disconnected. Room will restart in 5 seconds'
+    popUpInterval = setInterval(changePopUpLine, 50)
+    isRestartBtnActive = false
+    restartBtn.removeEventListener('click', requestForRestart)
+    document.removeEventListener('keydown', requestForRestardOnKey)
+    restartBtn.setAttribute('data-tooltip', 'Cannot restart (opponent disconnected)')
+    restartBtn.addEventListener('click', () => document.location.reload())
+    waitingPlayerTwo(false)
+
+    setTimeout(() => {
+      document.location.reload()
+    }, 5000)
   })
 
   socket.on('winner', (winner) => {
     if (winner === Number(playerIndex)) {
       popUpText.textContent = 'You win!'
-      popUp.insertAdjacentHTML('afterbegin', successIcon)
+      popUpIcon.innerHTML = successIcon
       popUp.classList.add('active')
       popUpInterval = setInterval(changePopUpLine, 25)
       confettiDuration = Date.now() + 4000
@@ -172,7 +189,7 @@ window.requestAnimationFrame(function() {
       audio.volume = 0.1
       audio.play()
     } else {
-      popUp.insertAdjacentHTML('afterbegin', errorIcon)
+      popUpIcon.innerHTML = errorIcon
       popUpText.textContent = 'You lose!'
       popUp.classList.add('active')
       popUpInterval = setInterval(changePopUpLine, 25)
@@ -182,13 +199,21 @@ window.requestAnimationFrame(function() {
   socket.on('send-progress', function(data) {
     if (Number(playerIndex) === 0) {
       playerOneContainer.style.left = `${data.playerOneProgress}%`
+      playerOneWpm.textContent = `${data.playerOneCurrentWpm} wpm`
       playerTwoContainer.style.left = `${data.playerTwoProgress}%`
+      playerTwoWpm.textContent = `${data.playerTwoCurrentWpm} wpm`
     }
 
     if (Number(playerIndex) === 1) {
       playerOneContainer.style.left = `${data.playerTwoProgress}%`
+      playerOneWpm.textContent = `${data.playerTwoCurrentWpm} wpm`
       playerTwoContainer.style.left = `${data.playerOneProgress}%`
+      playerTwoWpm.textContent = `${data.playerOneCurrentWpm} wpm`
     }
+  })
+
+  socket.on('restart-game', function() {
+    document.location.reload()
   })
 })
 
@@ -372,8 +397,36 @@ function deleteLetterIndex(e) {
     const letter = word.children[letterIndex]
     letter.className = ''
     slashCoords()
-  }
+  } 
 }
+
+function returnToPrevWord(e) {
+  const word = document.querySelector('.word.active') || wordsContainer.firstChild
+  const wordsLength = wordsContainer.children.length
+
+  if (wordIndex !== 0 && wordsContainer.children[wordIndex - 1].classList.contains('word__incorrect')) {
+    if (letterIndex === 0 && e.keyCode === 8) {
+      wordIndex--
+      letterIndex = wordsContainer.children[wordIndex].children.length
+      const currentWord = wordsContainer.children[wordIndex]
+      currentWord.classList.add('active')
+      word.classList.remove('active')
+      slashCoords()
+      textarea.value = ''
+      wordsAmount.textContent = `${wordIndex} / ${wordsLength}`
+    }
+  }
+
+  for (let i = 0; i < word.children.length; ++i) {
+    if (!word.children[i].classList.contains('incorrect') || !word.children[i].classList.contains('extra')) {
+      word.classList.remove('word__incorrect')
+    }
+  }
+
+  const nullify = wordIndex <= 0 ? wordIndex = 0 : wordIndex
+}
+
+document.addEventListener('keydown', returnToPrevWord)
 
 // clear words area
 function clearWordsArea() {
@@ -416,7 +469,7 @@ function clearWordsArea() {
 const myChart = new Chart(chart, {
   type: 'bar',
   data: {
-    labels: ['wpm', 'raw wpm', 'highscore'],
+    labels: ['wpm', 'raw wpm', 'mistakes'],
     datasets: [{
       data: [],
       backgroundColor: [
@@ -455,6 +508,9 @@ function endResult() {
   textarea.removeEventListener('input', checkIsWordCorrect)
   textarea.removeEventListener('blur', addBlurEffect);
   document.removeEventListener('keydown', sendWordsProgress)
+
+  restartBtn.addEventListener('click', requestForRestart)
+  document.addEventListener('keydown', requestForRestardOnKey)
 
   const timeContent = timerHTML.textContent
   const time = Number((timeContent / 60).toFixed(2))
@@ -585,6 +641,18 @@ const themesArray = [
   'cobalt',
   'led_zeppelin',
   'greenwild',
+  'github',
+  'timber',
+  'black_and_white',
+  'aqua',
+  'beige',
+  'watermelon',
+  'grass',
+  'solarized',
+  'bluish',
+  'phoenix',
+  'night_call',
+  'fresh',
 ]
 
 // random themes
@@ -626,6 +694,7 @@ sortThemes();
 themeChanger.onclick = () => {
   themePickerBg.classList.add('active');
   themePicker.classList.add('active');
+  document.removeEventListener('keypress', spawnKey)
 };
 
 themePickerBg.onclick = () => {
@@ -634,6 +703,7 @@ themePickerBg.onclick = () => {
   findTheme.value = '';
   searchTheme();
   removeBlurEffect();
+  document.addEventListener('keypress', spawnKey)
 };
 
 const themes = document.querySelectorAll('.theme');
@@ -650,6 +720,7 @@ for (let i = 0; i < themes.length; ++i) {
     document.body.classList.add(`${themes[i].textContent}`);
     themePickerBg.classList.remove('active');
     themePicker.classList.remove('active');
+    document.addEventListener('keypress', spawnKey)
     themeChanger.textContent = `${themes[i].textContent}`;
     localStorage.setItem('theme', themes[i].textContent);
     checkTheme();
@@ -790,6 +861,7 @@ function saveScreenshot() {
       })
 
       popUpText.textContent = 'Copied!'
+      popUpIcon.innerHTML = successIcon
       popUp.classList.add('active')
       popUpInterval = setInterval(changePopUpLine, 25)
     } catch (err) {
@@ -913,4 +985,29 @@ function sendWordsProgress() {
   }
 
   socket.emit('player-progress', playerProgress)
+}
+
+// restart game
+let isRestartBtnActive = false
+
+function requestForRestart() {
+  if (!isRestartBtnActive) {
+    isRestartBtnActive = true
+    restartBtn.classList.add('active')
+    restartBtn.setAttribute('data-tooltip', 'rematch (requested for rematch)')
+    waitingPlayerTwo(true)
+    socket.emit('request-restart', 'requested for restart')
+  }
+}
+
+function requestForRestardOnKey(e) {
+  if (!isRestartBtnActive) {
+    if (e.keyCode == 9) {
+      isRestartBtnActive = true
+      restartBtn.classList.add('active')
+      restartBtn.setAttribute('data-tooltip', 'rematch (requested for rematch)')
+      waitingPlayerTwo(true)
+      socket.emit('request-restart', 'requested for restart')
+    }
+  }
 }

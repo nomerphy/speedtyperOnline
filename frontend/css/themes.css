@@ -417,3 +417,125 @@ body.greenwild{
 	--correct: #FEFEFE;
 	--incorrect: #F50537;
 }
+
+body.github{
+	--background: #0D1117;
+	--light: #161B22;
+	--dark: #5F666F;
+	--text: #fefefe;
+	--contrast: #5F666F;
+	--correct: #2EA043;
+	--incorrect: #E34C26;
+}
+
+body.timber{
+	--background: #004533;
+	--light: #FFA000;
+	--dark: #FFA000;
+	--text: #004533;
+	--contrast: #FFA000;
+	--correct: #FEFEFE;
+	--incorrect: #E34C26;
+}
+
+body.black_and_white{
+	--background: #000000;
+	--light: #FFFFFF;
+	--dark: #FFFFFF;
+	--text: #000000;
+	--contrast: #FFFFFF;
+	--correct: #A3AC3A;
+	--incorrect: #FE5C85;
+}
+
+body.aqua{
+	--background: #35CADA;
+	--light: #101011;
+	--dark: #101011;
+	--text: #35CADA;
+	--contrast: #101011;
+	--correct: #FFFFFF;
+	--incorrect: #FE5C85;
+}
+
+body.beige{
+	--background: #F8C792;
+	--light: #000000;
+	--dark: #000000;
+	--text: #F8C792;
+	--contrast: #000000;
+	--correct: #FFFFFF;
+	--incorrect: #F96854;
+}
+
+body.watermelon{
+	--background: #FF9384;
+	--light: #004533;
+	--dark: #004533;
+	--text: #FF9384;
+	--contrast: #004533;
+	--correct: #b0fcc3;
+	--incorrect: #F96854;
+}
+
+body.grass{
+	--background: #51F6BB;
+	--light: #215140;
+	--dark: #215140;
+	--text: #51F6BB;
+	--contrast: #215140;
+	--correct: #F9F9F9;
+	--incorrect: #FF7BAB;
+}
+
+body.solarized{
+	--background: #FBFAF3;
+	--light: #BCBFC4;
+	--dark: #BCBFC4;
+	--text: #FBFAF3;
+	--contrast: #BCBFC4;
+	--correct: #5CFEBA;
+	--incorrect: #FE5C85;
+}
+
+body.bluish{
+	--background: #5933FC;
+	--light: #FFDB8A;
+	--dark: #FFDB8A;
+	--text: #5933FC;
+	--contrast: #FFDB8A;
+	--correct: #FFFFEE;
+	--incorrect: #FC3359;
+}
+
+body.phoenix{
+	--background: #222222;
+	--light: linear-gradient(-60deg, #ff5858 0%, #f09819 100%);
+	--dark: #F77838;
+	--text: #222222;
+	--contrast: #F77838;
+	--correct: #C4F502;
+	--incorrect: #E1260C;
+}
+
+body.night_call{
+	--background: #190A3E;
+	--light: linear-gradient(-225deg, #AC32E4 0%, #7918F2 48%, #4801FF 100%);
+	--dark: #A730E5;
+	--text: #190A3E;
+	--contrast: #A730E5;
+	--correct: #b0fcc3;
+	--incorrect: #B62323;
+}
+
+body.fresh{
+	--background: #C5FBE4;
+	--light: linear-gradient(0deg, #43e97b 10%, #38f9d7 100%);
+	--dark: #37BD73;
+	--text: #349A62;
+	--contrast: #37BD73;
+	--correct: #FFFFFF;
+	--incorrect: #FE666F;
+}
+
+

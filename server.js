@@ -6,6 +6,8 @@ const app = express()
 const server = http.Server(app)
 const io = socketio(server)
 
+const port = process.env.PORT || 3000
+
 app.use(express.static('frontend'))
 
 
@@ -19,6 +21,7 @@ let wordsArray = []
 let playerOneWmp, playerTwoWmp, playerOneMistakes, playerTwoMistakes, playerOneAccuracy, playerTwoAccuracy, playerOneTime, playerTwoTime, winnerIndex
 let winningCount = 0
 let endPlayerCount = 0
+let playersRequestedForRestart = 0
 
 function createWordsArray(data, arr, container) {
   //const wordsAmountArray = [10, 15, 20, 25, 30, 35, 40, 45, 50]
@@ -40,7 +43,7 @@ function createWordsArray(data, arr, container) {
   }
 }
 
-server.listen(3000, console.log('server started'))
+server.listen(port, console.log('server started'))
 
 const connections = [null, null]
 
@@ -103,6 +106,18 @@ let playerIndex = -1
 
     // console.log(`Player one wmp : ${playerOneWmp}`)
     // console.log(`Player two wmp : ${playerTwoWmp}`)
+  })
+
+  socket.on('request-restart', function() {
+    playersRequestedForRestart++
+
+    if (playersRequestedForRestart === 2) {
+      io.emit('restart-game', 'restart')
+
+      setTimeout(() => {
+        playersRequestedForRestart = 0
+      }, 1000)
+    }
   })
 
   socket.on('disconnect', function() {

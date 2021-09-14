@@ -194,6 +194,7 @@ a {
 }
 
 .player__one, .player__two{
+    position: relative;
     width:  100%;
     height:  100%;
     display:  flex;
@@ -210,17 +211,26 @@ a {
     align-items: center;
     justify-content: space-around;
     transition: all .35s linear;
+    z-index: 10;
 }
 
 .player__one-wrap p, .player__two-wrap p {
     margin-left:  10px;
     font-size: 16px;
     color:  var(--contrast);
-    transform:  translateX(-10px);
+    transform:  translateX(-11px);
 }
 
 .player__one-wrap p{
     font-weight: bold;
+}
+
+.player__one-wpm, .player__two-wpm{
+    position: absolute;
+    right: 0;
+    bottom: 10%;
+    font-weight: bold;
+    color: var(--contrast);
 }
 
 .words__textarea {
@@ -270,6 +280,7 @@ a {
     margin-right: 15px;
     justify-content: center;
     align-items: center;
+    color: var(--text);
 }
 
 .words__container .word:before {
@@ -966,6 +977,10 @@ a {
     stroke: var(--background);
 }
 
+.restart svg path{
+    stroke: var(--background);
+}
+
 .svg__warn g path {
     fill: var(--background);
 }
@@ -1004,9 +1019,12 @@ a {
     top: 15px;
     right: 15px;
     display: flex;
-    width: 210px;
+    min-width: 210px;
+    width: auto;
+    max-width: 330px;
     height: auto;
     min-height: 50px;
+    max-height: 85px;
     transition: all 0.35s ease-out;
     transform: translateY(-20px);
     pointer-events: none;
@@ -1430,4 +1448,8 @@ span {
         clip-path:  circle(100%);
         transform: rotate(0deg);
     }
+}
+
+.restart.active svg path{
+    stroke: var(--correct);
 }
